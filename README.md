@@ -1,2 +1,2 @@
-# virtual-keyboard
-RS School Task - Virtual keyboard
+# Virtual Keyboard
+## RS School Task 

@@ -1,4 +1,5 @@
-/* eslint-disable max-len */
+import keys from './keys.js';
+
 const Keyboard = {
   elements: {
     main: null,
@@ -20,18 +21,22 @@ const Keyboard = {
   init() {
     // Create main elements
     this.elements.main = document.createElement('div');
-    const title = document.createElement('h1');
-    this.elements.inputField = document.createElement('input');
+    this.elements.inputField = document.createElement('textarea');
     this.elements.virtualKeyboard = document.createElement('div');
+
+    const title = document.createElement('h1');
+    const info = document.createElement('div');
+
 
     // Setup main elements
     this.elements.main.setAttribute('class', 'container');
+    info.classList.add('info');
 
     title.innerHTML = 'eng / ru virtual keyboard';
+    info.innerHTML = '<p>Press Ctrl + Alt to switch languages</p>';
 
-    this.elements.inputField.setAttribute('class', 'input');
-    this.elements.inputField.placeholder = 'Tap on the keyboard to start...';
-
+    this.elements.inputField.setAttribute('class', 'textarea use-keyboard');
+    this.elements.inputField.placeholder = 'Tap on keyboard to start...';
     this.elements.virtualKeyboard.setAttribute('class', 'keyboard');
 
     // Add to DOM
@@ -40,38 +45,36 @@ const Keyboard = {
     this.elements.main.append(this.elements.inputField);
     this.elements.main.append(this.elements.virtualKeyboard);
 
-    const rowLayout = ['one', 'two', 'three', 'four', 'five'];
-    rowLayout.forEach((row) => {
-      const rowElement = document.createElement('div');
-      rowElement.setAttribute('class', `row ${row}`);
-      this.elements.virtualKeyboard.append(rowElement);
-    });
-
     this.elements.virtualKeyboard.append(this.createKeys());
+    this.elements.main.append(info);
+
+    this.elements.keys = this.elements.virtualKeyboard.querySelectorAll('.keyboard__key');
+
+    // Automatically use keyboard with input
+    document.querySelectorAll('.use-keyboard').forEach((element) => {
+      element.addEventListener('focus', () => {
+        this.start(element.value, (currentValue) => {
+          element.value = currentValue;
+        });
+      });
+    });
   },
 
   createKeys() {
     // Returns document fragments
     const fragment = document.createDocumentFragment();
-    const keyLayout = [
-      '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
-      'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 'del',
-      'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'enter',
-      'shift_left', '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'arrow_up', 'shift_right',
-      'ctrl_left', 'win', 'alt_left', 'space', 'alt_right', 'ctrl_right', 'arrow_left', 'arrow_down', 'arrow_right'];
 
-    const shiftLayout = [
-      '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '',
-      '', '', '', '', '', '', '', '', '', '', '', '{', '}', '',
-      '', '', '', '', '', '', '', '', '', '', ':', '"', '',
-      '', '|', '', '', '', '', '', '', '', '<', '>', '?', '', '',
-      '', '', '', '', '', '', '', '', ''];
+    // Creates keyboard layouts
+    this.keyCode = keys.keyCode;
+    this.keyEng = keys.keyEng;
+    this.keyEngCaps = keys.keyEngCaps;
+    this.keyRus = keys.keyRus;
+    this.keyRusCaps = keys.keyRusCaps;
 
     // Creates HTML for an icon
     const createIconHTML = (iconName) => `<i class="material-icons">${iconName}</i>`;
-    const createSpanHTML = (spanValue) => `<span>${spanValue}</span>`;
 
-    keyLayout.forEach((key) => {
+    this.keyEng.forEach((key) => {
       const keyElement = document.createElement('button');
 
       // Add attributes and classes
@@ -81,17 +84,6 @@ const Keyboard = {
       });
 
       switch (key) {
-        case 'del':
-          keyElement.classList.add('del');
-          keyElement.innerHTML = 'Del';
-
-          keyElement.addEventListener('click', () => {
-            if (this.properties.value.length > 0) {
-              this.properties.value = this.properties.value.substring(0, this.properties.value.length - 1);
-            }
-          });
-
-          break;
 
         case 'win':
           keyElement.classList.add('win');
@@ -100,8 +92,7 @@ const Keyboard = {
           });
           break;
 
-        case 'alt_left':
-        case 'alt_right':
+        case 'alt':
           keyElement.classList.add('alt');
           keyElement.innerHTML = 'Alt';
 
@@ -109,8 +100,7 @@ const Keyboard = {
           });
           break;
 
-        case 'ctrl_left':
-        case 'ctrl_right':
+        case 'ctrl':
           keyElement.classList.add('ctrl');
           keyElement.innerHTML = 'Ctrl';
 
@@ -118,8 +108,7 @@ const Keyboard = {
           });
           break;
 
-        case 'shift_left':
-        case 'shift_right':
+        case 'shift':
           keyElement.classList.add('shift');
           keyElement.innerHTML = 'Shift';
 
@@ -138,7 +127,6 @@ const Keyboard = {
           });
 
           break;
-
 
         case 'backspace':
           keyElement.classList.add('backspace');
@@ -190,6 +178,7 @@ const Keyboard = {
 
         case 'arrow_up':
           keyElement.innerHTML = createIconHTML('keyboard_arrow_up');
+          keyElement.classList.add('arrow');
 
           keyElement.addEventListener('click', () => {
             // this refers to Keyboard object
@@ -201,6 +190,7 @@ const Keyboard = {
 
         case 'arrow_down':
           keyElement.innerHTML = createIconHTML('keyboard_arrow_down');
+          keyElement.classList.add('arrow');
 
           keyElement.addEventListener('click', () => {
             // this refers to Keyboard object
@@ -212,6 +202,7 @@ const Keyboard = {
 
         case 'arrow_left':
           keyElement.innerHTML = createIconHTML('keyboard_arrow_left');
+          keyElement.classList.add('arrow');
 
           keyElement.addEventListener('click', () => {
             this.elements.inputField.selectionStart -= 1;
@@ -221,6 +212,7 @@ const Keyboard = {
 
         case 'arrow_right':
           keyElement.innerHTML = createIconHTML('keyboard_arrow_right');
+          keyElement.classList.add('arrow');
 
           keyElement.addEventListener('click', () => {
             this.elements.inputField.selectionStart += 1;
@@ -240,22 +232,35 @@ const Keyboard = {
       }
 
       fragment.appendChild(keyElement);
-
     });
 
     return fragment;
   },
 
   triggerEvent(handlerName) {
-    console.log('Event Triggered! Event name: ' + handlerName);
+    if (typeof this.eventHandlers[handlerName] === 'function') {
+      this.eventHandlers[handlerName](this.properties.value);
+    }
+  },
+
+  start(initialValue, onInput) {
+    this.properties.value = initialValue || '';
+    this.eventHandlers.onInput = onInput;
   },
 
   toggleCapsLock() {
-    console.log('Caps Lock toggled');
+    this.properties.capsLock = !this.properties.capsLock;
+
+    this.elements.keys.forEach((key) => {
+      if (key.textContent.length < 2) {
+        key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+      }
+    });
   },
 };
 
 function start() {
   Keyboard.init();
 }
+
 window.addEventListener('DOMContentLoaded', start);

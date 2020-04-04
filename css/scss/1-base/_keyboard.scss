@@ -32,7 +32,8 @@
     flex-grow: 1;
 
     box-shadow: 0 0 3px -1px rgba(0, 0, 0, .3);
-    width: 65px;
+    width: 60px;
+    margin:2px;
     border-radius: 5px;
     box-sizing: border-box;
     padding: 5px;
@@ -56,12 +57,6 @@
     }
   }
 
-span {
-    font-size: 1.2rem;
-    padding: 3px;
-    color: rgba(0, 0, 0, 0.5);
-    pointer-events: none
-}
 
 .keyboard__key.selectedButton {
     background: #05194660;
@@ -75,11 +70,11 @@ span {
 .space {
     flex-grow: 10;
 }
- .caps {
+.caps {
      width:95px;
  }
 
- .enter {
+.enter {
      width:100px;
  }
  
@@ -90,10 +85,34 @@ span {
     background-position: center;
  }
 
- .shift, .ctrl, .alt, .del {
+ .alt {
+     width:45px;
+ }
+
+ .backspace {
+     width:90px;
+ }
+ .shift, .ctrl, .alt {
      font-size: 1.4rem;
  }
-.uppercase {
-    text-transform: uppercase;
-  }
-  
+
+ .tab {
+     width:90px;
+ }
+
+ .shift, .ctrl, .alt, .enter, .caps, .win, .backspace, .tab, .arrow {
+    background-color: $color-function-keys;
+}
+
+.arrow {
+    width:60px;
+    flex-grow:0;
+}
+
+.arrow:nth-last-child(1){
+    margin-right: 5px;
+}
+
+.ctrl:nth-of-type(2n - 1) {
+    flex-grow: 0;
+}

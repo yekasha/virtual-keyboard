@@ -31,3 +31,15 @@ h1 {
   }
 }
 
+.info {
+    margin: 20px 0;
+    background:$color-text-bg;
+    border-radius: 10px;
+    padding-left: 10px;
+
+    & p {
+      font-size: 2rem;
+      color: $color-white;
+      line-height: 1rem;
+    }
+}

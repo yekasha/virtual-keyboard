@@ -11,13 +11,10 @@ module.exports = {
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2018,
+        "ecmaVersion": 6,
         "sourceType": "module"
     },
-    "plugins": [
-        
-    ],
-    "rules": {
-    
+    "settings": {
+      "import/extensions": [{ "js": "always"}]
     }
-};
+};s

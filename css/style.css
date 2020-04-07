@@ -112,7 +112,7 @@ textarea:focus {
 }
 
 .key-pressed {
-  background-color: aqua;
+  background-color: rgba(123, 199, 204, 0.3);
 }
 
 .keyboard__key.selectedButton {
@@ -160,7 +160,7 @@ textarea:focus {
 }
 
 .shift, .ctrl, .alt, .enter, .caps, .win, .backspace, .tab, .arrow {
-  background-color: #f2f2f2;
+  font-size: 1.4rem;
 }
 
 .arrow {

@@ -6,14 +6,14 @@ class Keyboard {
       main: null,
       textarea: null,
       keyboard: null,
-      keys: [],
+      keys: []
     };
 
     this.properties = {
       value: '',
       capsLock: false,
       shift: false,
-      language: localStorage.getItem('lang'),
+      language: localStorage.getItem('lang')
     };
 
     this.codes = keys.code;
@@ -23,7 +23,7 @@ class Keyboard {
 
   init() {
     this.createElements();
-    this.keypressEvents(); 
+    this.keypressEvents();
   }
 
   createElements() {
@@ -31,7 +31,7 @@ class Keyboard {
     this.elements.main = document.createElement('div');
     this.elements.textarea = document.createElement('textarea');
     this.elements.keyboard = document.createElement('div');
-   
+
     const clear = document.createElement('button');
     const title = document.createElement('h1');
     const info = document.createElement('div');
@@ -41,7 +41,11 @@ class Keyboard {
 
     title.innerHTML = 'eng / ru virtual keyboard';
 
+    clear.setAttribute('class', 'clear-button');
     clear.innerHTML = 'Clear Textarea';
+    clear.addEventListener('click', () => {
+      this.clearInput();
+    });
 
     info.classList = 'info';
     info.innerHTML = '<p>Press Shift + Alt to switch languages (project\'s based on Windows OS layout)</p>';
@@ -60,7 +64,7 @@ class Keyboard {
 
     this.elements.keyboard.append(this.createKeys());
     this.elements.main.append(info);
-    //this.elements.main.append(clear);
+    this.elements.main.append(clear);
 
     this.elements.keys = this.elements.keyboard.querySelectorAll('.keyboard__key');
   }
@@ -68,7 +72,7 @@ class Keyboard {
   createKeys() {
     // Returns document fragments
     const fragment = document.createDocumentFragment();
-    const { properties,elements } = this;
+    const { properties, elements } = this;
 
     // Creates keyboard layouts
     this.code = keys.code;
@@ -84,7 +88,6 @@ class Keyboard {
     } else keysLayout = this.ru;
 
     // Creates HTML for an icon
-    const createIconHTML = (iconName) => `<i class="material-icons">${iconName}</i>`;
 
     keysLayout.forEach((key, i) => {
       const keyElement = document.createElement('button');
@@ -92,7 +95,7 @@ class Keyboard {
       // Add attributes and classes
       Object.assign(keyElement, {
         className: 'keyboard__key',
-        type: 'button',
+        type: 'button'
       });
 
       keyElement.dataset.code = this.code[keysLayout.indexOf(key, i)];
@@ -100,43 +103,42 @@ class Keyboard {
       switch (key) {
         case '':
           keyElement.classList.add('win');
-          keyElement.addEventListener('click', () => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
           });
           break;
 
         case 'Alt':
           keyElement.classList.add('alt');
           keyElement.innerHTML = 'Alt';
-          keyElement.addEventListener('click', () => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
           });
           break;
 
         case 'Ctrl':
           keyElement.classList.add('ctrl');
           keyElement.innerHTML = 'Ctrl';
-          keyElement.addEventListener('click', () => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
           });
           break;
 
         case 'Shift':
           keyElement.classList.add('shift');
           keyElement.innerHTML = 'Shift';
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
-            this.shiftToggle(e);
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
+            this.shiftToggle(event);
           });
           break;
 
         case 'Space':
           keyElement.classList.add('space');
           keyElement.innerHTML = 'Space';
-          //keyElement.innerHTML = createIconHTML('space_bar');
 
-          keyElement.addEventListener('click', () => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
 
             properties.value += ' ';
             this.triggerEvent();
@@ -146,20 +148,16 @@ class Keyboard {
         case 'Backspace':
           keyElement.classList.add('backspace');
           keyElement.innerHTML = 'Backspace';
-         // keyElement.innerHTML = createIconHTML('backspace');
 
-          keyElement.addEventListener('click', () => {
-            this.defaultFocus();
-
-            properties.value = properties.value.substring(0, properties.value.length - 1);
-            this.triggerEvent();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
+            this.backspace();
           });
           break;
 
         case 'Caps Lock':
           keyElement.classList.add('caps');
           keyElement.innerHTML = 'Caps Lock';
-         // keyElement.innerHTML = createIconHTML('keyboard_capslock');
 
           keyElement.addEventListener('click', () => {
             this.toggleCaps();
@@ -170,10 +168,9 @@ class Keyboard {
         case 'Enter':
           keyElement.classList.add('enter');
           keyElement.innerHTML = 'Enter';
-         // keyElement.innerHTML = createIconHTML('keyboard_return');
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
 
             properties.value += '\n';
             this.triggerEvent();
@@ -183,10 +180,9 @@ class Keyboard {
         case 'Tab':
           keyElement.classList.add('tab');
           keyElement.innerHTML = 'Tab';
-         // keyElement.innerHTML = createIconHTML('keyboard_tab');
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
 
             properties.value += '    ';
             this.triggerEvent();
@@ -194,55 +190,53 @@ class Keyboard {
           break;
 
         case '▲':
-         // keyElement.innerHTML = createIconHTML('keyboard_arrow_up');
           keyElement.classList.add('arrow');
           keyElement.innerHTML = '▲';
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
             properties.value += '▲';
             this.triggerEvent();
           });
           break;
 
         case '▼':
-         // keyElement.innerHTML = createIconHTML('keyboard_arrow_down');
           keyElement.classList.add('arrow');
           keyElement.innerHTML = '▼';
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
             properties.value += '▼';
             this.triggerEvent();
           });
           break;
 
         case '◄':
-         // keyElement.innerHTML = createIconHTML('keyboard_arrow_left');
           keyElement.classList.add('arrow');
           keyElement.innerHTML = '◄';
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
-            elements.textarea.selectionEnd -= 1;
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
+            if (elements.textarea.selectionStart > 0) {
+              elements.textarea.selectionEnd -= 1;
+            }
           });
           break;
 
         case '►':
-         // keyElement.innerHTML = createIconHTML('keyboard_arrow_right');
           keyElement.classList.add('arrow');
           keyElement.innerHTML = '►';
 
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
             elements.textarea.selectionStart += 1;
           });
           break;
 
         default:
           keyElement.textContent = key.toLowerCase();
-          keyElement.addEventListener('click', (e) => {
-            this.defaultFocus();
+          keyElement.addEventListener('click', (event) => {
+            this.defaultFocus(event);
             const keyRegister = properties.capsLock ? key.toUpperCase() : key.toLowerCase();
             properties.value += keyRegister;
             this.triggerEvent();
@@ -260,141 +254,136 @@ class Keyboard {
       const { properties, elements, codes } = this;
 
       Array.from(elements.keys).filter((e) => e.dataset.code === key)
-      .forEach((e) => this.togglePress(e));  
-        
-        switch (key) {
-          case 'Backspace':
-            this.defaultFocus();
-            if (elements.textarea.selectionStart > 0) {
-              if (elements.textarea.selectionEnd === elements.textarea.selectionStart) {
-                properties.value = properties.value.substring(0, elements.textarea.selectionStart - 1) + properties.value.substring(elements.textarea.selectionStart, properties.value.length);
-                this.addValue(key, 'remove');
-              } else {
-                properties.value = properties.value.substring(0, elements.textarea.selectionStart) + properties.value.substring(elements.textarea.selectionEnd, properties.value.length);
-                this.addValue(key);
-              }
-            } else { 
-              this.addValue(key); 
-            }
-            break;
-  
-          case 'Delete':
-           this.defaultFocus();
-            break;
-            
-          case 'Tab':
-            this.defaultFocus();
-            properties.value += '\t';
-            this.addValue(key, 'add');
-            break;    
-  
-          case 'CapsLock':
-            //this.defaultFocus();
-            this.toggleCaps();
-    
-            break;
-  
-          case 'Enter':
-            this.defaultFocus();
-            properties.value += '\n';
-            this.addValue(key, 'add');
-            break;
-  
-          case 'Space':
-            this.defaultFocus();
-            properties.value += ' ';
-            this.addValue(key, 'add');
-            break;
-  
-          case 'ShiftLeft':
-          case 'ShiftRight':
-            if (!event.repeat) {
-              this.shiftToggle(event);
-            }
-            break;
-          case 'ControlLeft':
-          case 'ControlRight':
-            this.defaultFocus();
-            break;
+        .forEach((e) => Keyboard.togglePress(e));
 
-          case 'AltRight':
-            event.preventDefault();
-            break;
-  
-          case 'AltLeft':
-            event.preventDefault();
-            this.pressed.add(event.code);
-            break;
-  
-          case 'ArrowUp':
-            this.defaultFocus();
-            properties.value += '▲';
-            this.triggerEvent();
-            break;
+      // Aux vars declaration
+      let keySymbol;
+      let char = elements.keys[codes.indexOf(key)].textContent;
 
-          case 'ArrowDown':
-            this.defaultFocus();
-            properties.value += '▼';
-            this.triggerEvent();
-            break;
+      let start = elements.textarea.selectionStart;
+      let str = properties.value;
 
-          case 'ArrowLeft':
-            this.defaultFocus();
+      switch (key) {
+        case 'Backspace':
+          this.defaultFocus(event);
+          this.backspace();
+          break;
+
+        case 'Delete':
+          this.defaultFocus(event);
+          break;
+
+        case 'Tab':
+          this.defaultFocus(event);
+          properties.value += '\t';
+          this.updateKeyboard('add');
+          break;
+
+        case 'CapsLock':
+          this.toggleCaps();
+
+          break;
+
+        case 'Enter':
+          this.defaultFocus(event);
+          properties.value += '\n';
+          this.updateKeyboard('add');
+          break;
+
+        case 'Space':
+          this.defaultFocus(event);
+          properties.value += ' ';
+          this.updateKeyboard('add');
+          break;
+
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          if (!event.repeat) {
+            this.shiftToggle(event);
+          }
+          break;
+        case 'ControlLeft':
+        case 'ControlRight':
+          this.defaultFocus(event);
+          break;
+
+        case 'AltRight':
+          event.preventDefault();
+          break;
+
+        case 'AltLeft':
+          event.preventDefault();
+          this.pressed.add(event.code);
+          break;
+
+        case 'ArrowUp':
+          this.defaultFocus(event);
+          properties.value += '▲';
+          this.triggerEvent();
+          break;
+
+        case 'ArrowDown':
+          this.defaultFocus(event);
+          properties.value += '▼';
+          this.triggerEvent();
+          break;
+
+        case 'ArrowLeft':
+          this.defaultFocus(event);
+          if (start > 0) {
             elements.textarea.selectionEnd -= 1;
-            break;
+          }
+          break;
 
-          case 'ArrowRight':
-            this.defaultFocus();
-            elements.textarea.selectionStart += 1;
-            break;
+        case 'ArrowRight':
+          this.defaultFocus(event);
+          elements.textarea.selectionStart += 1;
+          break;
 
-          default:
-              this.defaultFocus();
-              
-              let symbol;
-              if (properties.capsLock && properties.shift) { 
-                symbol = elements.keys[codes.indexOf(key)].textContent.toLowerCase(); 
-              } else if (this.checkRegister(elements.keys[codes.indexOf(key)].textContent) && properties.shift) { 
-                symbol = !properties.capsLock ? elements.keys[codes.indexOf(key)].textContent.toUpperCase() : elements.keys[codes.indexOf(key)].textContent.toLowerCase(); }
-                else {
-                symbol = properties.capsLock ? elements.keys[codes.indexOf(key)].textContent.toUpperCase() : elements.keys[codes.indexOf(key)].textContent.toLowerCase();
-              }
-              properties.value = properties.value.substring(0, elements.textarea.selectionStart) + symbol + properties.value.substring(elements.textarea.selectionStart, properties.value.length);
-              this.addValue(key,'add');
-          
-            break;
-        }  
+        default:
+          this.defaultFocus(event);
+
+          if (properties.capsLock && properties.shift) {
+            keySymbol = char.toLowerCase();
+          } else if (Keyboard.checkRegister(char) && properties.shift) {
+            keySymbol = !properties.capsLock ? char.toUpperCase() : char.toLowerCase();
+          } else {
+            keySymbol = properties.capsLock ? char.toUpperCase() : char.toLowerCase();
+          }
+          properties.value = str.substring(0, start) + keySymbol + str.substring(start, str.length);
+          this.updateKeyboard('add');
+
+          break;
+      }
     });
 
     window.addEventListener('keyup', (event) => {
       const { properties, elements } = this;
-     
+
       if (this.pressed.size === 2) {
-          properties.language = properties.language === 'ru' ? 'en' : 'ru';
-          localStorage.setItem('lang', properties.language);
+        properties.language = properties.language === 'ru' ? 'en' : 'ru';
+        localStorage.setItem('lang', properties.language);
       }
 
       if (event.key === 'Shift') {
-        
         properties.shift = false;
         if (properties.language === 'en') {
-          for (let i = 0; i < elements.keys.length; i++) {
+          for (let i = 0; i < elements.keys.length; i += 1) {
             elements.keys[i].innerHTML = this.en[i];
           }
-        } else { 
-          for (let i = 0; i < elements.keys.length; i++) {
+        } else {
+          for (let i = 0; i < elements.keys.length; i += 1) {
             elements.keys[i].innerHTML = this.ru[i];
           }
         }
-        }
+      }
 
       this.pressed = new Set();
-
     });
   }
 
-  // Helper functions
-  defaultFocus() {
+  // Aux functions
+  defaultFocus(event) {
     this.elements.textarea.focus();
     event.preventDefault();
   }
@@ -406,11 +395,13 @@ class Keyboard {
   toggleCaps() {
     const { properties } = this;
     properties.capsLock = !properties.capsLock;
-    for (const e of this.elements.keys) {
-      if (e.textContent.length < 2) { 
-        e.textContent = properties.capsLock ? e.textContent.toUpperCase() : e.textContent.toLowerCase(); 
+
+    this.elements.keys.forEach((e) => {
+      let text = e.textContent;
+      if (text.length < 2) {
+        e.textContent = properties.capsLock ? text.toUpperCase() : text.toLowerCase();
       }
-    }
+    });
   }
 
   shiftToggle(event) {
@@ -418,20 +409,28 @@ class Keyboard {
     this.properties.shift = true;
 
     if (this.properties.language === 'en') {
-      for (let i = 0; i < this.elements.keys.length; i++) {
+      for (let i = 0; i < this.elements.keys.length; i += 1) {
         this.elements.keys[i].innerHTML = this.enShift[i];
       }
-    } else { 
-      for (let i = 0; i < this.elements.keys.length; i++) {
+    } else {
+      for (let i = 0; i < this.elements.keys.length; i += 1) {
         this.elements.keys[i].innerHTML = this.ruShift[i];
       }
     }
   }
 
-  addValue(element, selection) {
+  clearInput() {
+    this.properties.value = '';
+    this.updateKeyboard();
+    this.elements.textarea.focus();
+  }
+
+  updateKeyboard(mode) {
     const { elements, properties } = this;
-    
-    switch(selection) {
+
+    let selection = 0;
+
+    switch (mode) {
       case 'add':
         selection = elements.textarea.selectionStart + 1;
         break;
@@ -442,45 +441,49 @@ class Keyboard {
         selection = elements.textarea.selectionStart;
         break;
     }
-    
+
     elements.textarea.value = properties.value;
     elements.textarea.selectionStart = selection;
     elements.textarea.selectionEnd = selection;
   }
 
-  checkRegister(value) {
-    let checker = (value === value.toUpperCase()) ? true : false;
+  backspace() {
+    let end = this.elements.textarea.selectionEnd;
+    let start = this.elements.textarea.selectionStart;
+    let str = this.properties.value;
+    let selectedText = str.substring(start, end);
+
+    if (selectedText.length > 0) {
+      this.properties.value = str.replace(selectedText, '');
+      this.updateKeyboard();
+      return;
+    }
+
+    if (start > 0) {
+      if (end === start) {
+        this.properties.value = str.substring(0, start - 1) + str.substring(start, str.length);
+        this.updateKeyboard('remove');
+      } else {
+        this.properties.value = str.substring(0, start) + str.substring(end, str.length);
+        this.updateKeyboard();
+      }
+    } else {
+      this.updateKeyboard();
+    }
+  }
+
+  static checkRegister(value) {
+    let checker = (value === value.toUpperCase());
     return checker;
   }
 
-  togglePress(element) {
+  static togglePress(element) {
     element.classList.add('key-pressed');
     setTimeout(() => {
-        element.classList.remove('key-pressed');
-      }, 100);
-    }
+      element.classList.remove('key-pressed');
+    }, 100);
+  }
 }
-
-
-
-
-// changeLanguage() {
-//    Change language on Ctrl + Alt
-//   document.addEventListener('keydown', (event) => {
-//     if (event.ctrlKey === true && event.altKey === true) {
-//       if (this.properties.lang === 'en') {
-//         this.properties.lang = 'ru';
-//         localStorage.setItem('lang', this.properties.lang);
-//         this.createKeys();
-//       } else {
-//         this.properties.lang = 'en';
-//         localStorage.setItem('lang', this.properties.lang);
-//         this.createKeys();
-//       }
-//     }
-//   });
-// }
-
 
 window.addEventListener('DOMContentLoaded', () => {
   const keyboard = new Keyboard();

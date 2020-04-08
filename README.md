@@ -1,5 +1,5 @@
 # RS School 2020Q1 task Virtual Keyboard
-### Deadline: 05.04.2020 23:59
+### Deadline: 07.04.2020 23:59
 
 [View implementation](https://kotiknalune.github.io/virtual-keyboard/)
 

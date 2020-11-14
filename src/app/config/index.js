@@ -1,9 +1,22 @@
-const supportedLanguages = ['en', 'es', 'ru'];
-const defaultSettings = {
-  layout: 'KBDLA',
-  language: 'en'
+const supportedLanguages = {
+  english : {
+    name: 'English',
+    code: 'en'
+  },
+  spanish: {
+    name: 'Spanish',
+    code: 'es'
+  },
+  russian: {
+    name: 'Russian',
+    code: 'ru'
+  }
 };
 
+const defaultSettings = {
+  platofrms: ['Windows', 'iOS'],
+  language: supportedLanguages.english
+};
 
 export {
   supportedLanguages,

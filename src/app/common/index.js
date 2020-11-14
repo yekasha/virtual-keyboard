@@ -1,10 +1,8 @@
-import { defaultSettings } from '../config';
 import * as keyboard from './keyCodes.json';
 
-const keyboardLayout = keyboard.filter(preset => preset.layout === defaultSettings.layout);
-if (!keyboardLayout) throw new Error('Keyboard layout is malformed, please check config');
+const keyboardLayout = keyboard;
+if (!keyboardLayout) throw new Error('Keyboard is malformed, please contact the developer');
 
-// const keysMap = keyboardLayout.keys;
-// const arrowMap = keyboardLayout.navigation;
+const modifierKeys = ["Tab", "CapsLock", "Shift", "Control", "Meta", "Alt", "Space", "Enter", "Backspace"]
 
-export default { keyboardLayout };
+export { keyboardLayout, modifierKeys };

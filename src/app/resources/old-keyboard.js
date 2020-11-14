@@ -1,7 +1,7 @@
-import keys from './keys.js';
-
-class Keyboard {
-  constructor() {
+export default class Keyboard {
+  constructor(layout, language) {
+    this.layout = layout;
+    this.language = language;
     this.elements = {
       main: null,
       textarea: null,
@@ -16,7 +16,7 @@ class Keyboard {
       language: localStorage.getItem('lang')
     };
 
-    this.codes = keys.code;
+    this.codes = null;
     this.pressed = new Set();
     this.init();
   }
@@ -75,11 +75,11 @@ class Keyboard {
     const { properties, elements } = this;
 
     // Creates keyboard layouts
-    this.code = keys.code;
-    this.en = keys.en;
-    this.enShift = keys.enShift;
-    this.ru = keys.ru;
-    this.ruShift = keys.ruShift;
+    this.code = null;
+    this.en = null;
+    this.enShift = null;
+    this.ru = null;
+    this.ruShift = null;
 
     // Apply set layout
     let keysLayout;
@@ -237,7 +237,8 @@ class Keyboard {
           keyElement.textContent = key.toLowerCase();
           keyElement.addEventListener('click', (event) => {
             this.defaultFocus(event);
-            properties.value += keyElement.textContent;
+            const keyRegister = properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+            properties.value += keyRegister;
             this.triggerEvent();
           });
           break;
@@ -483,8 +484,3 @@ class Keyboard {
     }, 100);
   }
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  const keyboard = new Keyboard();
-  return keyboard;
-});

@@ -1,4 +1,4 @@
-require('./styles/index.css');
+require('../css/style.scss');
 
 import Keyboard from './app/resources/Keyboard';
 import { keyboardLayout } from './app/common/';

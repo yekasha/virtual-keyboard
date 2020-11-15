@@ -1,3 +1,5 @@
+import { createElement } from "../utils/createElement";
+
 export default class Keyboard {
   constructor(layout, language) {
     this.layout = layout;
@@ -7,46 +9,33 @@ export default class Keyboard {
     this.textarea = null;
   }
   render() {
-    console.log('Keyboard', this.layout, this.language);
-    this.renderElements();
+    this.renderDOMElements();
   }
 
-  renderElements() {
+  renderDOMElements() {
     // TODO: add language choice select menu and an os toggle
+    const title = createElement('h1', { class: 'title' }, 'virtual keyboard');
+    const languageSwitch = createElement('div', { class: 'language-switch' }, 'en / es / ru');
+    const osSwitch = createElement('div', { class: 'os-switch' }, 'windows / ios');
 
-      const mainContainer = document.createElement('div');
-      mainContainer.setAttribute('class', 'container');
+    const header = createElement('div', { class: 'header' }, [title, languageSwitch, osSwitch]);
 
-      this.textarea = document.createElement('textarea');
-      this.textarea.setAttribute('class', 'textarea use-keyboard');
-      this.textarea.placeholder = 'Tap on keyboard to begin typing...';
-      this.textarea.autofocus = true;
+    this.textarea = createElement('textarea', { 
+      class: 'textarea use-keyboard', 
+      placeholder: 'Tap on keyboard to begin typing...', 
+      autofocus: true
+    });
+    
+    this.keyboard = createElement('div', { class: 'keyboard' });
 
-      this.keyboard = document.createElement('div');
-      this.keyboard.setAttribute('class', 'keyboard');
-  
-      const resetButton = document.createElement('button');
-      resetButton.setAttribute('class', 'clear-button');
-      resetButton.innerHTML = 'Clear Textarea';
+    const infoText = createElement('div', { class: 'info' }, 'This is a simple virtual keyboard project for a course');
+    const resetButton = createElement('button', { class: 'clear-button' }, 'Clear textarea');
 
-      const title = document.createElement('h1');
-      title.innerHTML = 'virtual keyboard';
-
-      const infoText = document.createElement('div');
-      infoText.classList = 'info';
-      infoText.innerHTML = '<p>This is a simple virtual keyboard project for a course</p>';
-  
-      // Add to DOM
-      document.body.append(mainContainer);
-      mainContainer.append(title);
-      mainContainer.append(this.textarea);
-      mainContainer.append(this.keyboard);
-  
-      // this.keyboard.append(this.createKeys());
-      // this.keys = this.keyboard.querySelectorAll('.keyboard__key');
-
-      mainContainer.append(infoText);
-      mainContainer.append(resetButton);
+    const mainContainer = createElement('div', { class: 'container' }, [header, this.textarea, this.keyboard, infoText, resetButton]);
+    document.body.append(mainContainer);
+   
+    // this.keyboard.append(this.createKeys());
+    // this.keys = this.keyboard.querySelectorAll('.keyboard__key');
     }
 }
 

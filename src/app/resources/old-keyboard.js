@@ -239,7 +239,7 @@ export default class Keyboard {
             this.defaultFocus(event);
             const keyRegister = properties.capsLock ? key.toUpperCase() : key.toLowerCase();
             properties.value += keyRegister;
-            this.triggerEvent();
+            this.elements.textarea.value = this.properties.value;
           });
           break;
       }
@@ -380,16 +380,6 @@ export default class Keyboard {
 
       this.pressed = new Set();
     });
-  }
-
-  // Aux functions
-  defaultFocus(event) {
-    this.elements.textarea.focus();
-    event.preventDefault();
-  }
-
-  triggerEvent() {
-    this.elements.textarea.value = this.properties.value;
   }
 
   toggleCaps() {

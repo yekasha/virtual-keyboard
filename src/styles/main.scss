@@ -71,12 +71,23 @@ textarea:focus {
   width: 100%;
   height: 300px;
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
+  
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 0px 0px;
+  grid-template-areas:
+    ". . . . . . . . . . . . . backspace backspace"
+    "tab tab . . . . . . . . . . . . ."
+    "capslock capslock . . . . . . . . . . . enter enter"
+    "shiftleft shiftleft shiftleft . . . . . . . . . . shiftright shiftright"
+    ". . . space space space space space space space . . navigation navigation navigation";
+
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
   box-sizing: border-box;
   overflow: hidden;
   touch-action: manipulation;
@@ -88,27 +99,24 @@ textarea:focus {
 }
 
 .keyboard__key {
-  border-width: 0;
-  outline: 0;
-  font-size: 1.7rem;
-  display: inline-block;
-  flex-grow: 1;
-  box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
-  width: 60px;
-  margin: 2px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  padding: 5px;
-  background-color: #fff;
-  border-bottom: 1px solid #b5b5b5;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-  transition: all 0.1s ease-in-out;
-  -moz-transition: all 0.1s ease-in-out;
-  -webkit-transition: all 0.1s ease-in-out;
+  min-width: 55px;
+    flex-direction: column-reverse;
+    border-width: 0;
+    outline: 0;
+    font-size: 1.5rem;
+    box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-bottom: 1px solid #b5b5b5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.1s ease-in-out;
+    -moz-transition: all 0.1s ease-in-out;
+    -webkit-transition: all 0.1s ease-in-out;
 }
 .keyboard__key:hover {
   background-color: #f9f9f9;
@@ -130,57 +138,32 @@ textarea:focus {
   background: #efefef;
 }
 
-.space {
-  flex-grow: 10;
+[type=modifier] {
+  font-size: 1.2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  &.backspace, &.enter, &.shiftright, &.metaright, &.altright {
+    align-items: flex-end;
+  }
+  &.metaleft .key__value, &.metaright .key__value {
+    font-size: 1rem;
+  }
+  &.metaleft .key__superscript {
+    align-self: flex-end;
+  }
+  &.metaright .key__superscript {
+    align-self: flex-start;
+  }
 }
 
-.caps {
-  width: 95px;
-}
-
-.enter {
-  width: 100px;
-}
-
-.win {
-  background-image: url(../../public/windows.png);
-  background-repeat: no-repeat;
-  background-size: 25px;
-  background-position: center;
-}
-
-.alt {
-  width: 45px;
-}
-
-.backspace {
-  width: 90px;
-}
-
-.shift, .ctrl, .alt {
-  font-size: 1.4rem;
-}
-
-.tab {
-  width: 90px;
-}
-
-.shift, .ctrl, .alt, .enter, .caps, .win, .backspace, .tab, .arrow {
-  font-size: 1.4rem;
-}
-
-.arrow {
-  width: 60px;
-  flex-grow: 0;
-}
-
-.arrow:nth-last-child(1) {
-  margin-right: 5px;
-}
-
-.ctrl:nth-of-type(2n - 1) {
-  flex-grow: 0;
-}
+.backspace { grid-area: backspace; }
+.tab { grid-area: tab; }
+.capslock { grid-area: capslock; }
+.enter { grid-area: enter; }
+.shiftleft { grid-area: shiftleft; }
+.shiftright { grid-area: shiftright; }
+.navigation { grid-area: navigation; }
+.space { grid-area: space; }
 
 .clear-button{
   width: 130px;

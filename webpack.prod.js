@@ -10,7 +10,7 @@ const buildPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
     devtool: 'source-map',
-    entry: './src/index.js',
+    entry: './src/app/index.js',
     output: {
         filename: '[name].[hash:20].js',
         path: buildPath
@@ -87,7 +87,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './index.html',
+            template: './src/index.html',
             // Inject the js bundle at the end of the body of the given template
             inject: 'body',
         }),

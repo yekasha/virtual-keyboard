@@ -1,24 +1,14 @@
-const supportedLanguages = {
-  english : {
-    name: 'English',
-    code: 'en'
-  },
-  spanish: {
-    name: 'Spanish',
-    code: 'es'
-  },
-  russian: {
-    name: 'Russian',
-    code: 'ru'
-  }
-};
+import { UI } from './constants';
 
-const defaultSettings = {
-  platofrms: ['Windows', 'iOS'],
-  language: supportedLanguages.english
-};
+import ENGLISH from './lang/en.lang.json';
+import SPANISH from './lang/es.lang.json';
+import RUSSIAN from './lang/ru.lang.json';
+
+const supportedLanguages = [ENGLISH, SPANISH, RUSSIAN];
+const supportedPlatforms = ['Windows', 'iOS'];
 
 export {
   supportedLanguages,
-  defaultSettings
+  supportedPlatforms,
+  UI
 };

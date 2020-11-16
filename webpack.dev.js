@@ -1,13 +1,12 @@
 const path = require('path');
-
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     devtool: 'eval-cheap-module-source-map',
-    entry: './src/index.js',
+    entry: './src/app/index.js',
     devServer: {
         port: 8080,
-        contentBase: path.join(__dirname, "dist")
+        contentBase: path.join(__dirname, 'dist')
     },
     node: {
         fs: 'empty'
@@ -26,19 +25,19 @@ module.exports = {
                 test: /\.(scss|css)$/,
                 use: [
                     {
-                        loader: "style-loader",
+                        loader: 'style-loader',
                         options: {
                             sourceMap: true
                         }
                     },
                     {
-                        loader: "css-loader",
+                        loader: 'css-loader',
                         options: {
                             sourceMap: true
                         }
                     },
                     {
-                        loader: "sass-loader",
+                        loader: 'sass-loader',
                         options: {
                             outputStyle: 'expanded',
                             sourceMap: true,
@@ -73,7 +72,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './index.html',
+            template: './src/index.html',
             inject: true
         })
     ]

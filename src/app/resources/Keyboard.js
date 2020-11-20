@@ -86,7 +86,7 @@ export default class Keyboard {
     }));
   }
 
-  handleKeyEvents() {
+  addKeyboardListeners() {
     this.keyboard.addEventListener('click', e => {
       e.preventDefault();
       
@@ -98,7 +98,10 @@ export default class Keyboard {
       if (element.classList.value.includes('Arrow')) this.textarea.handleArrowNavigation(element);
       else this.handleAlphanumericInput(element);
     });
+  }
 
+  handleKeyEvents() {
+    this.addKeyboardListeners();
     window.addEventListener('keydown', e => {
       e.preventDefault();
 
@@ -221,6 +224,8 @@ export default class Keyboard {
     document.querySelector('.keyboard').remove();
     this.keyboard = createElement('div', { class: 'keyboard' }, this.renderKeys());
     document.querySelector('textarea').insertAdjacentElement('afterend', this.keyboard);
+
+    this.addKeyboardListeners();
   }
 
   setToggleEvent() {

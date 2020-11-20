@@ -25,9 +25,10 @@ export default class Textarea {
     update(input) {
       const textarea = document.querySelector('textarea');
       textarea.focus();
-      
+
+      // TODO: fix switching caret position and input case...  (only 1 letter work for now), then caret resets
       if (input) { 
-        textarea.value += input; 
+        textarea.value = `${textarea.value.substring(0, textarea.selectionStart)}${input}${textarea.value.substring(textarea.selectionEnd, textarea.value.length)}`; 
         this.handleDiacritic();
       }
       else textarea.value = EMPTY_STRING;

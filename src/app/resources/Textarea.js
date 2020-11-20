@@ -6,10 +6,6 @@ export default class Textarea {
     constructor(langIndex) {
         this.index = langIndex;
         this.value = EMPTY_STRING;
-        this.selection = {
-          start: 0,
-          end: 0
-        }
     }
 
     updateLanguage(lang) { 
@@ -25,7 +21,7 @@ export default class Textarea {
             autofocus: true
           });
     }
-    
+
     update(input) {
       const textarea = document.querySelector('textarea');
       textarea.focus();
@@ -42,31 +38,10 @@ export default class Textarea {
       this.update();
     }
 
-
     backspace() {
-      console.log('add backspace key behaviour');
-      // let end = this.elements.textarea.selectionEnd;
-      // let start = this.elements.textarea.selectionStart;
-      // let str = this.properties.value;
-      // let selectedText = str.substring(start, end);
-  
-      // if (selectedText.length > 0) {
-      //   this.properties.value = str.replace(selectedText, '');
-      //   this.updateKeyboard();
-      //   return;
-      // }
-  
-      // if (start > 0) {
-      //   if (end === start) {
-      //     this.properties.value = str.substring(0, start - 1) + str.substring(start, str.length);
-      //     this.updateKeyboard('remove');
-      //   } else {
-      //     this.properties.value = str.substring(0, start) + str.substring(end, str.length);
-      //     this.updateKeyboard();
-      //   }
-      // } else {
-      //   this.updateKeyboard();
-      // }
+      const value = document.querySelector('textarea').value.split('');
+      value.pop();
+      document.querySelector('textarea').value = value.join('');
     }
 
     handleArrowNavigation(arrow) {

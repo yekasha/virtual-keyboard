@@ -11,7 +11,7 @@ export default class Keyboard {
   constructor(language) {
     this.activeLanguage = language;
 
-    this.OS = (!navigator.platform.includes('Mac')) ? supportedPlatforms[WINDOWS] : supportedPlatforms[IOS];
+    this.OS = (!navigator.platform.includes('Mac')) ? supportedPlatforms[WINDOWS].toLowerCase(): supportedPlatforms[IOS].toLowerCase();
     this.isWindows = (!navigator.platform.includes('Mac'));
 
     this.keyboard = null;
@@ -19,8 +19,6 @@ export default class Keyboard {
 
     this.languages = [];
     this.languageIndex = {};
-
-    this.layout = [];
 
     this.shiftEnabled = false;
     this.capsEnabled = false;
@@ -42,7 +40,7 @@ export default class Keyboard {
 
   renderDOMElements() {
     const langIndex = this.languageIndex[this.activeLanguage.code];
-    const title = createElement('h1', { class: 'title' }, UI.title[langIndex]);
+    const title = createElement('h1', { class: 'title', type: 'text'}, UI.title[langIndex]);
 
     supportedLanguages.forEach(lang => {
       const langOption = createElement('option', { value: lang.code, id: lang.code }, lang.name);
@@ -52,7 +50,7 @@ export default class Keyboard {
     const languageSwitch = createElement('select', { 
       class: 'language-switch', 
       name: 'languages',
-      onChange: () => { this.setLanguageEvent() }
+      onChange: () => { this.updateLanguage() }
     }, this.languages);
 
     const osSwitchText = createElement('span', {}, this.OS);
@@ -63,87 +61,152 @@ export default class Keyboard {
       onClick: () => { this.setToggleEvent() }
     });
     const osSwitch = createElement('label', { class: 'os-switch', for: 'os' }, [osSwitchToggle, osSwitchText,]);
+    
+    const resetButton = createElement('button', { 
+      class: 'clear',
+      type: 'text',
+      onClick: () => { this.textarea.clear(); }
+    }, UI.clear[langIndex]);
 
-    const header = createElement('div', { class: 'header' }, [title, languageSwitch, osSwitch]);
+    const header = createElement('div', { class: 'header' }, [title, languageSwitch, osSwitch, resetButton]);
 
-    this.textarea = new Textarea(langIndex);
-    const textarea = this.textarea.render();
+    this.textarea = new Textarea(langIndex);    
     
     this.keyboard = createElement('div', { class: 'keyboard' }, this.renderKeys());
 
-    const infoText = createElement('div', { class: 'info' }, UI.description[langIndex]);
-    const resetButton = createElement('button', { class: 'clear-button' }, UI.clear[langIndex]);
+    const infoText = createElement('div', { class: 'info', type: 'text' }, UI.info[langIndex]);
 
-    const mainContainer = createElement('div', { class: 'container' }, [header, textarea, this.keyboard, infoText, resetButton]);
+    const mainContainer = createElement('div', { class: 'container' }, [header, this.textarea.render(), this.keyboard, infoText]);
     document.body.append(mainContainer);
   }
 
-  renderKeys() {    
-    this.layout = (keyboardLayout[this.OS.toLowerCase()]).map((row, rowIndex) => row.map((key, index) => { 
-      const languageMatrix = this.activeLanguage.keys[this.OS.toLowerCase()];
+  renderKeys() {   
+    return (keyboardLayout[this.OS]).map((row, rowIndex) => row.map((key, index) => { 
+      const languageMatrix = this.activeLanguage.keys[this.OS];
       const value = languageMatrix[rowIndex][index];
       return key = new Key(key, value).render();
     }));
-    return this.layout;
   }
 
   handleKeyEvents() {
     this.keyboard.addEventListener('click', e => {
       e.preventDefault();
       
-      let target = e.target;
-      if (target.localName === 'span') target = target.parentNode;
-      if (modifierKeys.join(' ').toLowerCase().includes(target.classList.value.split(' ')[1])) this.handleModifierKey(target);
-      else this.handleAlphanumericKey(target);
+      let element = e.target;
+
+      if (element.localName === 'div') return;
+      if (element.localName === 'span') element = element.parentNode;
+      if (modifierKeys.join(' ').toLowerCase().includes(element.classList.value.split(' ')[1])) this.handleModifierKey(element);
+      if (element.classList.value.includes('Arrow')) this.textarea.handleArrowNavigation(element);
+      else this.handleAlphanumericInput(element);
     });
 
     window.addEventListener('keydown', e => {
       e.preventDefault();
 
-      const key = e.code;
+    const key = e.code;`  `
       const pressedKey = this.keyboard.querySelector(`button[code=${key}]`);
+      
       if (modifierKeys.includes(key)) this.handleModifierKey(pressedKey); 
-      else this.handleAlphanumericKey(pressedKey);
+      else this.handleAlphanumericInput(pressedKey);
       
       pressedKey.classList.add('key-pressed');
-      setTimeout(() => { pressedKey.classList.remove('key-pressed'); }, 100);
+      setTimeout(() => { pressedKey.classList.remove('key-pressed'); }, 150);
+    });
+
+    window.addEventListener('keyup', e => { 
+      if (e.code.includes('Shift')) {
+        this.shiftEnabled = false;
+        this.manageShiftPress();
+      } // ! This is a workaround for Caps key in Chrome/Safari
+      if (e.code.includes('Caps')) {
+        this.capsEnabled = false;
+        this.manageLetterCase();
+      }
     });
   }
 
-  handleModifierKey(target) {
-    console.log('modifier', target);
+  handleModifierKey(element) { 
+    const keyCode = element.getAttribute('code');
+    switch(keyCode) {
+      case 'Space':
+        this.textarea.update(' ');
+        break;
+      case 'Enter':
+        this.textarea.update('\n');
+        break;
+      case 'Tab':
+        this.textarea.update('    ');
+        break;
+      case 'Backspace':
+        this.textarea.backspace();
+        break;
+      case 'CapsLock':
+        this.capsEnabled = !this.capsEnabled;
+        this.manageLetterCase();
+        break;
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        this.shiftEnabled = !this.shiftEnabled;
+        this.manageShiftPress();
+        break;
+      default:
+        break;
+    }
   }
 
-  handleAlphanumericKey(prop) {
+  handleAlphanumericInput(prop) {
     let inputValue = this.capsEnabled ? prop.textContent.toUpperCase().charAt(0) : prop.textContent.toLowerCase().charAt(0);
-    inputValue = (this.shiftEnabled) ? this.enableShiftOnKey(prop.textContent) : inputValue;
+    inputValue = (this.shiftEnabled) ? this.enableShiftedInput(prop.textContent) : inputValue;
     this.textarea.update(inputValue);
   }
 
-  enableShiftOnKey(text) {
+  enableShiftedInput(text) {
     if (text.length === 1) return text.toUpperCase();
     else return text.charAt(1);
   }
 
-  setLanguageOptions() {
-    const languageOptions = document.querySelectorAll('option');
-    languageOptions.forEach(option => option.selected = false );
-    document.getElementById(this.activeLanguage.code).selected = true;
+  manageLetterCase() {
+    const charKeys = this.keyboard.querySelectorAll('[type=alpha] > span');
+    charKeys.forEach(key => { 
+      key.innerText = (this.capsEnabled || this.shiftEnabled) ? key.innerText.toUpperCase() : key.innerText.toLowerCase();;
+    });
   }
 
-  setLanguageEvent() {
-    console.log('lang changed');
-    // change UI lang
-    // set local storage
-    // change all key language...
+  manageShiftPress() {
+    this.manageLetterCase();
+    const keysToShift = this.keyboard.querySelectorAll('[type=snumeric]');
+    keysToShift.forEach(key => { 
+      key.classList.toggle('shifted');
+    });
+  }
+
+  setLanguageOptions() {
+    const languageCode = document.querySelector('select').value;
+    localStorage.setItem('lang', languageCode);
+
+    supportedLanguages.forEach(language => {
+      if (languageCode === language.code) this.activeLanguage = language;
+    });
+  }
+
+  updateLanguage() {
+    this.setLanguageOptions();
+    const langIndex = this.languageIndex[this.activeLanguage.code];
+
+    this.textarea.updateLanguage(langIndex);
+
+    document.querySelectorAll('[type="text"]').forEach(element => element.innerText = UI[element.classList.value][langIndex]);
+    
+    document.querySelector('.keyboard').remove();
+    this.keyboard = createElement('div', { class: 'keyboard' }, this.renderKeys());
+    document.querySelector('textarea').insertAdjacentElement('afterend', this.keyboard);
   }
 
   setToggleEvent() {
     this.isWindows = !this.isWindows;
-    
     this.OS = (this.isWindows) ? supportedPlatforms[WINDOWS] : supportedPlatforms[IOS];
     document.querySelector('label > span').innerText =  this.OS;
     localStorage.setItem('os',  this.OS );
   }
 }
-

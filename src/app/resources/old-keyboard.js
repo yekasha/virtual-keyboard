@@ -269,33 +269,12 @@ export default class Keyboard {
           this.backspace();
           break;
 
-        case 'Delete':
-          this.defaultFocus(event);
-          break;
-
-        case 'Tab':
-          this.defaultFocus(event);
-          properties.value += '\t';
-          this.updateKeyboard('add');
-          break;
-
         case 'CapsLock':
           this.toggleCaps();
 
           break;
 
-        case 'Enter':
-          this.defaultFocus(event);
-          properties.value += '\n';
-          this.updateKeyboard('add');
-          break;
-
-        case 'Space':
-          this.defaultFocus(event);
-          properties.value += ' ';
-          this.updateKeyboard('add');
-          break;
-
+        
         case 'ShiftLeft':
         case 'ShiftRight':
           if (!event.repeat) {
@@ -307,14 +286,7 @@ export default class Keyboard {
           this.defaultFocus(event);
           break;
 
-        case 'AltRight':
-          event.preventDefault();
-          break;
-
-        case 'AltLeft':
-          event.preventDefault();
-          this.pressed.add(event.code);
-          break;
+        
 
         case 'ArrowUp':
           this.defaultFocus(event);
@@ -382,39 +354,6 @@ export default class Keyboard {
     });
   }
 
-  toggleCaps() {
-    const { properties } = this;
-    properties.capsLock = !properties.capsLock;
-
-    this.elements.keys.forEach((e) => {
-      let text = e.textContent;
-      if (text.length < 2) {
-        e.textContent = properties.capsLock ? text.toUpperCase() : text.toLowerCase();
-      }
-    });
-  }
-
-  shiftToggle(event) {
-    this.pressed.add(event.code);
-    this.properties.shift = true;
-
-    if (this.properties.language === 'en') {
-      for (let i = 0; i < this.elements.keys.length; i += 1) {
-        this.elements.keys[i].innerHTML = this.enShift[i];
-      }
-    } else {
-      for (let i = 0; i < this.elements.keys.length; i += 1) {
-        this.elements.keys[i].innerHTML = this.ruShift[i];
-      }
-    }
-  }
-
-  clearInput() {
-    this.properties.value = '';
-    this.updateKeyboard();
-    this.elements.textarea.focus();
-  }
-
   updateKeyboard(mode) {
     const { elements, properties } = this;
 
@@ -461,16 +400,3 @@ export default class Keyboard {
       this.updateKeyboard();
     }
   }
-
-  static checkRegister(value) {
-    let checker = (value === value.toUpperCase());
-    return checker;
-  }
-
-  static togglePress(element) {
-    element.classList.add('key-pressed');
-    setTimeout(() => {
-      element.classList.remove('key-pressed');
-    }, 100);
-  }
-}

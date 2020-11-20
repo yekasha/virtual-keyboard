@@ -1,4 +1,4 @@
-import { UI } from './constants';
+import { UI, diacritic } from './constants';
 
 import ENGLISH from './lang/en.lang.json';
 import SPANISH from './lang/es.lang.json';
@@ -10,5 +10,6 @@ const supportedPlatforms = ['Windows', 'iOS'];
 export {
   supportedLanguages,
   supportedPlatforms,
-  UI
+  UI,
+  diacritic
 };

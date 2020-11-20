@@ -4,26 +4,43 @@ import { createElement } from "../utils/createElement";
 const STANDARD = 0;
 const SUPER = 1;
 const COMMAND = 8984;
+
+const TYPE = {
+    alpha: 'alpha',
+    symbol: 'snumeric',
+    nav: 'navigation',
+    mod: 'modifier'
+}
 export default class Key {
     constructor(code, value) {
         this.code = code;
         this.value = value;
-        this.type = (modifierKeys.includes(this.code)) ? 'modifier' : 'alphanumeric';
-        
-        this.pressed = false;
+        this.type = this.assignKeyType();
     }
 
     render() {
         const keyClasses = (this.type === 'modifier') ? `keyboard__key ${this.code.toLowerCase()}` : 'keyboard__key';
+        if (this.type === TYPE.nav) return this.navigationKeys();
         return createElement('button', { class: keyClasses, type: this.type, code: this.code }, this.handleKeyValues());
     }
 
+    assignKeyType() {
+        // console.log(`value: ${this.value}, code: ${this.code}`);
+        if (modifierKeys.includes(this.code)) return TYPE.mod;
+        if (this.code === 'Arrows') return TYPE.nav;
+        if (this.value.length > 1) return TYPE.symbol
+        return TYPE.alpha;
+    }
+
     navigationKeys() {
-        // TODO: add navigation button keys
         const navigationKeys = keyboardLayout.navigation.map(row => row.map(arrow => {
-            console.log('arrow', arrow);
+            this.code = arrow;
+            return createElement(
+                'button', 
+                { class: `keyboard__key ${this.code}`, type: this.type, code: this.code }, 
+                createElement('span', {class: 'key__value' }, ''));
         }));
-        return navigationKeys;
+        return createElement('div', { class: 'keyboard__nav' }, navigationKeys);
     }
 
     handleKeyValues() {

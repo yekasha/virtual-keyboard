@@ -25,7 +25,6 @@ export default class Key {
     }
 
     assignKeyType() {
-        // console.log(`value: ${this.value}, code: ${this.code}`);
         if (modifierKeys.includes(this.code)) return TYPE.mod;
         if (this.code === 'Arrows') return TYPE.nav;
         if (this.value.length > 1) return TYPE.symbol
@@ -48,7 +47,6 @@ export default class Key {
         textValues.push(createElement('span', { class: 'key__value' }, this.value[STANDARD]));
         if (Number(this.value[SUPER]) === COMMAND) this.value[SUPER] = (String.fromCharCode(Number(this.value[SUPER])));
         if (this.value.length > 1) textValues.push(createElement('span', { class: 'key__superscript' }, this.value[SUPER]));
-
         return textValues;
     }
 }

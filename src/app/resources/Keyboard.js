@@ -1,4 +1,4 @@
-import { keyboardLayout, modifierKeys } from "../common";
+import { keyboardLayout, modifierKeys, navigationKeys } from "../common";
 import { supportedLanguages, supportedPlatforms } from "../config";
 import { UI } from "../config/constants";
 import { createElement } from "../utils/createElement";
@@ -71,11 +71,9 @@ export default class Keyboard {
     const header = createElement('div', { class: 'header' }, [title, languageSwitch, osSwitch, resetButton]);
 
     this.textarea = new Textarea(langIndex);    
-    
     this.keyboard = createElement('div', { class: 'keyboard' }, this.renderKeys());
 
     const infoText = createElement('div', { class: 'info', type: 'text' }, UI.info[langIndex]);
-
     const mainContainer = createElement('div', { class: 'container' }, [header, this.textarea.render(), this.keyboard, infoText]);
     document.body.append(mainContainer);
   }
@@ -104,26 +102,47 @@ export default class Keyboard {
     window.addEventListener('keydown', e => {
       e.preventDefault();
 
-    const key = e.code;`  `
+      const key = e.code;
       const pressedKey = this.keyboard.querySelector(`button[code=${key}]`);
-      
-      if (modifierKeys.includes(key)) this.handleModifierKey(pressedKey); 
-      else this.handleAlphanumericInput(pressedKey);
-      
+
       pressedKey.classList.add('key-pressed');
       setTimeout(() => { pressedKey.classList.remove('key-pressed'); }, 150);
+      
+      if (modifierKeys.includes(key)) return this.handleModifierKey(pressedKey); 
+      if (navigationKeys.includes(key)) return this.handleArrowNavigation(pressedKey);
+      else return this.handleAlphanumericInput(pressedKey);
     });
 
     window.addEventListener('keyup', e => { 
       if (e.code.includes('Shift')) {
         this.shiftEnabled = false;
         this.manageShiftPress();
-      } // ! This is a workaround for Caps key in Chrome/Safari
+      }
       if (e.code.includes('Caps')) {
         this.capsEnabled = false;
         this.manageLetterCase();
       }
     });
+  }
+
+  handleArrowNavigation(element) {
+    const arrowCode = element.getAttribute('code');
+    const textarea = document.querySelector('textarea');
+
+    switch (arrowCode) {
+      case 'ArrowUp':
+          break;
+        case 'ArrowDown':
+          break;
+        case 'ArrowLeft':
+          if (textarea.selectionEnd > 0) textarea.selectionEnd -= 1;
+          break;
+        case 'ArrowRight':
+          textarea.selectionStart += 1;
+          break;
+        default:
+          break;
+    }
   }
 
   handleModifierKey(element) { 
@@ -133,10 +152,11 @@ export default class Keyboard {
         this.textarea.update(' ');
         break;
       case 'Enter':
+        console.log('enter is pressed');
         this.textarea.update('\n');
         break;
       case 'Tab':
-        this.textarea.update('    ');
+        this.textarea.update('\t');
         break;
       case 'Backspace':
         this.textarea.backspace();

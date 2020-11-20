@@ -8,4 +8,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const keyboard = new Keyboard(currentLanguage);
   keyboard.render();
 });
-

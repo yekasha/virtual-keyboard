@@ -1,4 +1,4 @@
-require('../styles/main.scss');
+import '../styles/main.scss';
 
 import Keyboard from './resources/Keyboard';
 import { supportedLanguages } from './config';

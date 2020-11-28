@@ -12,8 +12,9 @@ export default class Keyboard {
     this.activeLanguage = language;
 
     this.OS = !navigator.platform.includes('Mac')
-      ? supportedPlatforms[WINDOWS].toLowerCase()
-      : supportedPlatforms[IOS].toLowerCase();
+      ? supportedPlatforms[WINDOWS]
+      : supportedPlatforms[IOS];
+
     this.isWindows = !navigator.platform.includes('Mac');
 
     this.keyboard = null;
@@ -70,7 +71,7 @@ export default class Keyboard {
       {
         class: 'language-switch',
         name: 'languages',
-        onChange: () => {
+        onchange: () => {
           this.updateLanguage();
         },
       },
@@ -82,12 +83,14 @@ export default class Keyboard {
       type: 'checkbox',
       class: 'os-toggle',
       id: 'os',
-      onClick: () => {
+      onclick: () => {
         this.setToggleEvent();
       },
     });
-    const osSwitch = createElement('label', { class: 'os-switch', for: 'os' }, [
+
+    const osSwitch = createElement('label', { class: 'switch', for: 'os' }, [
       osSwitchToggle,
+      createElement('div'),
       osSwitchText,
     ]);
 
@@ -96,7 +99,7 @@ export default class Keyboard {
       {
         class: 'clear',
         type: 'text',
-        onClick: () => {
+        onclick: () => {
           this.textarea.clear();
         },
       },
@@ -321,6 +324,7 @@ export default class Keyboard {
     this.OS = this.isWindows
       ? supportedPlatforms[WINDOWS]
       : supportedPlatforms[IOS];
+    console.log('OS at SetToggleEvent', this.OS);
     document.querySelector('label > span').innerText = this.OS;
     localStorage.setItem('os', this.OS);
   }

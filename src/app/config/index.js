@@ -5,11 +5,6 @@ import SPANISH from './lang/es.lang.json';
 import RUSSIAN from './lang/ru.lang.json';
 
 const supportedLanguages = [ENGLISH, SPANISH, RUSSIAN];
-const supportedPlatforms = ['Windows', 'iOS'];
+const supportedPlatforms = ['windows', 'ios'];
 
-export {
-  supportedLanguages,
-  supportedPlatforms,
-  UI,
-  diacritic
-};
+export { supportedLanguages, supportedPlatforms, UI, diacritic };

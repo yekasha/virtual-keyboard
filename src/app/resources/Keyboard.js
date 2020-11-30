@@ -125,7 +125,7 @@ export default class Keyboard {
     this.textarea = new Textarea(langIndex);
     this.keyboard = createElement(
       'div',
-      { class: 'keyboard' },
+      { class: `keyboard ${this.OS}` },
       this.renderKeys()
     );
 
@@ -134,7 +134,20 @@ export default class Keyboard {
       { class: 'info', type: 'text' },
       UI.info[langIndex]
     );
+
+    const featurePanel = createElement(
+      'div',
+      {
+        class: 'feature-panel',
+        onclick: () => {
+          this.showFeaturePanel();
+        },
+      },
+      createElement('p', {}, '🦄')
+    );
+
     const mainContainer = createElement('div', { class: 'container' }, [
+      featurePanel,
       header,
       this.textarea.render(),
       this.keyboard,
@@ -151,6 +164,11 @@ export default class Keyboard {
         return (key = new Key(key, value).render());
       })
     );
+  }
+
+  showFeaturePanel() {
+    const panel = document.querySelector('.feature-panel');
+    panel.classList.toggle('visible');
   }
 
   addKeyboardListeners() {
@@ -302,7 +320,7 @@ export default class Keyboard {
     document.querySelector('.keyboard').remove();
     this.keyboard = createElement(
       'div',
-      { class: 'keyboard' },
+      { class: `keyboard ${this.OS}` },
       this.renderKeys()
     );
     document

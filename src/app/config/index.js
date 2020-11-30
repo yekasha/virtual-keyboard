@@ -1,11 +1,10 @@
-const supportedLanguages = ['en', 'es', 'ru'];
-const defaultSettings = {
-  layout: 'KBDLA',
-  language: 'en'
-};
+import { UI, diacritic } from './constants';
 
+import ENGLISH from './lang/en.lang.json';
+import SPANISH from './lang/es.lang.json';
+import RUSSIAN from './lang/ru.lang.json';
 
-export {
-  supportedLanguages,
-  defaultSettings
-};
+const supportedLanguages = [ENGLISH, SPANISH, RUSSIAN];
+const supportedPlatforms = ['windows', 'ios'];
+
+export { supportedLanguages, supportedPlatforms, UI, diacritic };

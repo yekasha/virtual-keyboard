@@ -25,7 +25,7 @@
 
 - [ ] fix caret position upon arrow update
 - [ ] fix styles
-- [ ] add os toggle behavior
+- [x] add os toggle behavior
 - [ ] add up/down arrow behavior
 - [ ] add alt + letter like shift? (a lot of work though)
 - [ ] refactor constants and UI

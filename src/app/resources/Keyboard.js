@@ -32,7 +32,6 @@ export default class Keyboard {
   render() {
     this.renderDOMElements();
     this.setLanguageOptions();
-    this.renderKeys();
     this.handleKeyEvents();
   }
 
@@ -44,6 +43,8 @@ export default class Keyboard {
   }
 
   renderDOMElements() {
+    console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+
     const langIndex = this.languageIndex[this.activeLanguage.code];
     const title = createElement(
       'h1',
@@ -112,8 +113,8 @@ export default class Keyboard {
 
     const header = createElement('div', { class: 'header' }, [
       title,
-      languageContainer,
       osSwitch,
+      languageContainer,
       resetButton,
     ]);
 
@@ -293,19 +294,7 @@ export default class Keyboard {
     });
   }
 
-  updateLanguage() {
-    this.setLanguageOptions();
-    const langIndex = this.languageIndex[this.activeLanguage.code];
-
-    this.textarea.updateLanguage(langIndex);
-
-    document
-      .querySelectorAll('[type="text"]')
-      .forEach(
-        (element) =>
-          (element.innerText = UI[element.classList.value][langIndex])
-      );
-
+  updateKeyboardKeys() {
     document.querySelector('.keyboard').remove();
     this.keyboard = createElement(
       'div',
@@ -319,13 +308,20 @@ export default class Keyboard {
     this.addKeyboardListeners();
   }
 
+  updateLanguage() {
+    this.setLanguageOptions();
+    this.textarea.updateLanguage(this.languageIndex[this.activeLanguage.code]);
+    this.updateKeyboardKeys();
+  }
+
   setToggleEvent() {
     this.isWindows = !this.isWindows;
     this.OS = this.isWindows
       ? supportedPlatforms[WINDOWS]
       : supportedPlatforms[IOS];
-    console.log('OS at SetToggleEvent', this.OS);
     document.querySelector('label > span').innerText = this.OS;
     localStorage.setItem('os', this.OS);
+
+    this.updateKeyboardKeys();
   }
 }

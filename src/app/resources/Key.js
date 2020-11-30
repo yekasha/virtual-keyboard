@@ -57,6 +57,7 @@ export default class Key {
   }
 
   handleKeyValues() {
+    // console.log(this.value[STANDARD], this.value[SUPER]);
     const textValues = [];
     textValues.push(
       createElement('span', { class: 'key__value' }, this.value[STANDARD])

@@ -72,7 +72,7 @@
         ["option", "alt"],
         [""],
         ["option", "alt"],
-        ["command", "8984"],
+        ["command", "ctrl"],
         ["arrows"]
       ]
     ],

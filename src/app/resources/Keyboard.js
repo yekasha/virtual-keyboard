@@ -52,7 +52,11 @@ export default class Keyboard {
       UI.title[langIndex]
     );
 
-    const langDisabledOption = createElement('option', {}, 'Choose a language');
+    const langDisabledOption = createElement(
+      'option',
+      {},
+      'Available languages:'
+    );
 
     langDisabledOption.selected = false;
     langDisabledOption.disabled = true;

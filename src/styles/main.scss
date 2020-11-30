@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&display=swap');
+
 html {
   font-size: 62.5%;
 }
 
 body {
   background: #1f1f1f;
-  font-family: 'Roboto', Verdana sans-serif;
+  font-family: 'Raleway', Verdana sans-serif;
   font-size: 10px;
   transition: all 1s ease;
 
@@ -53,11 +55,8 @@ h1 {
   margin: 3rem 0rem;
   color: #ffffff80;
   transition: color 0.5s ease-in-out;
-  -moz-transition: color 0.5s ease-in-out;
-  -webkit-transition: color 0.5s ease-in-out;
-
-  cursor: -webkit-grab;
   flex-grow: 2;
+  cursor: default;
 }
 h1:hover {
   color: #ffffff;
@@ -240,8 +239,8 @@ textarea:focus {
   height: 3rem;
 }
 
-.clear:active {
-  background-color: #7bc6cc;
+.clear:hover {
+  background-color: white;
 }
 
 .keyboard__nav {
@@ -347,6 +346,7 @@ select {
   background: #bdb9a6;
   border-radius: 1em;
   margin: 0 2rem;
+  cursor: pointer;
 
   & div {
     height: 2.5rem;

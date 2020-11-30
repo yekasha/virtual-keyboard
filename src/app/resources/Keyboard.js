@@ -308,9 +308,18 @@ export default class Keyboard {
     this.addKeyboardListeners();
   }
 
+  updateUIText() {
+    const UIElements = document.querySelectorAll('[type="text"]');
+    UIElements.forEach((element) => {
+      element.innerText =
+        UI[element.classList][this.languageIndex[this.activeLanguage.code]];
+    });
+  }
+
   updateLanguage() {
     this.setLanguageOptions();
     this.textarea.updateLanguage(this.languageIndex[this.activeLanguage.code]);
+    this.updateUIText();
     this.updateKeyboardKeys();
   }
 

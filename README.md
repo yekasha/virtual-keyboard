@@ -30,4 +30,4 @@
 - [ ] add alt + letter like shift? (a lot of work though)
 - [ ] refactor constants and UI
 - [ ] refactor textarea, make a factory not a class
-- [ ] shift gradients by time
+- [x] shift gradients by time

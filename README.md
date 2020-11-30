@@ -24,10 +24,10 @@
 ## TODO
 
 - [ ] fix caret position upon arrow update
-- [ ] fix styles
+- [x] fix styles
 - [x] add os toggle behavior
 - [ ] add up/down arrow behavior
 - [ ] add alt + letter like shift? (a lot of work though)
-- [ ] refactor constants and UI
+- [x] refactor constants and UI
 - [ ] refactor textarea, make a factory not a class
 - [x] shift gradients by time

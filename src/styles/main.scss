@@ -77,6 +77,10 @@ body {
     & .container {
       opacity: 1;
       visibility: visible;
+
+      & ul li {
+        animation: fade-in 2s;
+      }
     }
   }
 
@@ -106,9 +110,10 @@ body {
 
     & ul li {
       padding-bottom: 1.5rem;
+
       color: rgb(190, 190, 190);
-      transition: color 0.3s ease;
       text-indent: -2.5rem;
+
       &:hover {
         color: white;
       }
@@ -442,4 +447,13 @@ select {
   -webkit-transform: translate3d(100%, 0, 0);
   -moz-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

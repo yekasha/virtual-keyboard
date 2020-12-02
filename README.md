@@ -29,5 +29,4 @@
 - [ ] add up/down arrow behavior
 - [ ] add alt + letter shift
 - [x] refactor constants and UI
-- [ ] refactor textarea, make a factory not a class
 - [x] shift gradients by time

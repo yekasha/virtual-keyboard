@@ -1,6 +1,6 @@
 # RS School 2020Q1 task Virtual Keyboard
 
-[View demo](https://kotiknalune.github.io/virtual-keyboard/)
+[View demo](kotiknalune-virtual-keyboard.netlify.app)
 
 ## Общие Требования
 

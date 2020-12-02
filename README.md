@@ -27,7 +27,7 @@
 - [x] fix styles
 - [x] add os toggle behavior
 - [ ] add up/down arrow behavior
-- [ ] add alt + letter like shift? (a lot of work though)
+- [ ] add alt + letter shift
 - [x] refactor constants and UI
 - [ ] refactor textarea, make a factory not a class
 - [x] shift gradients by time

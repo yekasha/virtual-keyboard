@@ -68,18 +68,51 @@ body {
   cursor: pointer;
 
   &.visible {
-    height: 500px;
-    width: 420px;
-
+    height: 420px;
+    width: 400px;
     & p {
       opacity: 0;
-      visibility: hidden;
+      display: none;
+    }
+    & .container {
+      opacity: 1;
+      visibility: visible;
     }
   }
 
   & p {
-    color: white;
     font-size: 18px;
+    transition: opacity 0.3s ease;
+  }
+
+  & .container {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    width: inherit;
+
+    & h2 {
+      padding: 0 3rem;
+      font-size: 2rem;
+    }
+
+    & ul {
+      list-style: none;
+      font-size: 1.7rem;
+      width: 80%;
+      padding-left: 5rem;
+    }
+
+    & ul li {
+      padding-bottom: 1.5rem;
+      color: rgb(190, 190, 190);
+      transition: color 0.3s ease;
+      text-indent: -2.5rem;
+      &:hover {
+        color: white;
+      }
+    }
   }
 }
 
@@ -148,7 +181,7 @@ textarea:focus {
     grid-template-areas: '. . . . . . . . . . . . . backspace backspace' 'tab tab . . . . . . . . . . . . enter' 'capslock capslock . . . . . . . . . . . . enter' 'shiftleft shiftleft .shiftkeft . . . . . . . . . shiftright shiftright' '. . . space space space space space space space . . navigation navigation navigation';
   }
 
-  &.ios {
+  &.macos {
     grid-template-areas:
       '. . . . . . . . . . . . . backspace backspace'
       'tab tab . . . . . . . . . . . . .'

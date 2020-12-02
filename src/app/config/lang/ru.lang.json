@@ -3,7 +3,7 @@
   "code": "ru",
   "isDiacritic": false,
   "keys": {
-    "ios": [
+    "macos": [
       [
         ["]", "["],
         ["1", "!"],

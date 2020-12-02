@@ -1,7 +1,7 @@
 import { keyboardLayout, modifierKeys, navigationKeys } from '../common';
 import { supportedLanguages, supportedPlatforms } from '../config';
 import { UI } from '../config/constants';
-import { createElement } from '../utils/createElement';
+import { createElement, DOMElements } from '../utils';
 import Key from './Key';
 import Textarea from './Textarea';
 
@@ -20,8 +20,7 @@ export default class Keyboard {
     this.keyboard = null;
     this.textarea = null;
 
-    this.languages = [];
-    this.languageIndex = {};
+    this.languages = {};
 
     this.shiftEnabled = false;
     this.capsEnabled = false;
@@ -37,30 +36,17 @@ export default class Keyboard {
 
   setupSupportedLanguages() {
     supportedLanguages.forEach(
-      (language, index) => (this.languageIndex[language.code] = index)
+      (language, index) => (this.languages[language.code] = index)
     );
     localStorage.setItem('lang', this.activeLanguage.code);
   }
 
   renderDOMElements() {
-    console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    console.log(this.languages);
+    const langIndex = this.languages[this.activeLanguage.code];
+    const languageOptions = [];
 
-    const langIndex = this.languageIndex[this.activeLanguage.code];
-    const title = createElement(
-      'h1',
-      { class: 'title', type: 'text' },
-      UI.title[langIndex]
-    );
-
-    const langDisabledOption = createElement(
-      'option',
-      {},
-      'Available languages:'
-    );
-
-    langDisabledOption.selected = false;
-    langDisabledOption.disabled = true;
-    this.languages.push(langDisabledOption);
+    languageOptions.push(DOMElements.disabledOption());
 
     supportedLanguages.forEach((lang) => {
       const langOption = createElement(
@@ -68,7 +54,7 @@ export default class Keyboard {
         { value: lang.code, id: lang.code },
         lang.name
       );
-      this.languages.push(langOption);
+      languageOptions.push(langOption);
     });
 
     const languageSwitch = createElement(
@@ -80,7 +66,13 @@ export default class Keyboard {
           this.updateLanguage();
         },
       },
-      this.languages
+      languageOptions
+    );
+
+    const languageContainer = createElement(
+      'div',
+      { class: 'select' },
+      languageSwitch
     );
 
     const osSwitchText = createElement('span', {}, this.OS);
@@ -111,12 +103,8 @@ export default class Keyboard {
       UI.clear[langIndex]
     );
 
-    const languageContainer = createElement('div', { class: 'select' }, [
-      languageSwitch,
-    ]);
-
     const header = createElement('div', { class: 'header' }, [
-      title,
+      DOMElements.title(langIndex),
       osSwitch,
       languageContainer,
       resetButton,
@@ -129,29 +117,12 @@ export default class Keyboard {
       this.renderKeys()
     );
 
-    const infoText = createElement(
-      'div',
-      { class: 'info', type: 'text' },
-      UI.info[langIndex]
-    );
-
-    const featurePanel = createElement(
-      'div',
-      {
-        class: 'feature-panel',
-        onclick: () => {
-          this.showFeaturePanel();
-        },
-      },
-      createElement('p', {}, '🦄')
-    );
-
     const mainContainer = createElement('div', { class: 'container' }, [
-      featurePanel,
+      DOMElements.featurePanel(),
       header,
       this.textarea.render(),
       this.keyboard,
-      infoText,
+      DOMElements.subtext(langIndex),
     ]);
     document.body.append(mainContainer);
   }
@@ -164,11 +135,6 @@ export default class Keyboard {
         return (key = new Key(key, value).render());
       })
     );
-  }
-
-  showFeaturePanel() {
-    const panel = document.querySelector('.feature-panel');
-    panel.classList.toggle('visible');
   }
 
   addKeyboardListeners() {
@@ -334,13 +300,13 @@ export default class Keyboard {
     const UIElements = document.querySelectorAll('[type="text"]');
     UIElements.forEach((element) => {
       element.innerText =
-        UI[element.classList][this.languageIndex[this.activeLanguage.code]];
+        UI[element.classList][this.languages[this.activeLanguage.code]];
     });
   }
 
   updateLanguage() {
     this.setLanguageOptions();
-    this.textarea.updateLanguage(this.languageIndex[this.activeLanguage.code]);
+    this.textarea.updateLanguage(this.languages[this.activeLanguage.code]);
     this.updateUIText();
     this.updateKeyboardKeys();
   }

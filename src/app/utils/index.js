@@ -1,4 +1,4 @@
 import { createElement } from './createElement';
-import { clearChildrenExtension } from './clearChildren';
+import { DOMElements } from './renderDOMElements';
 
-export { createElement, clearChildrenExtension };
+export { createElement, DOMElements };

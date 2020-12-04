@@ -3,61 +3,75 @@ import { createElement } from '../utils/createElement';
 
 const EMPTY_STRING = '';
 export default class Textarea {
-  constructor(langIndex) {
+  constructor(langIndex, element) {
     this.index = langIndex;
-    this.value = EMPTY_STRING;
+    this.element = element;
   }
 
   updateLanguage(lang) {
     this.index = lang;
-    document.querySelector('textarea').value = EMPTY_STRING;
-    document.querySelector('textarea').placeholder = UI.placeholder[this.index];
-  }
-
-  render() {
-    return createElement('textarea', {
-      class: 'textarea use-keyboard',
-      placeholder: UI.placeholder[this.index],
-      autofocus: true,
-    });
+    this.element.value = EMPTY_STRING;
+    this.element.placeholder = UI.placeholder[this.index];
   }
 
   update(input) {
-    const textarea = document.querySelector('textarea');
-    textarea.focus();
+    this.element.focus();
 
-    // TODO: fix switching caret position and input case...  (only 1 letter work for now), then caret resets
+    const start = this.element.selectionStart;
+    const end = this.element.selectionEnd;
+
     if (input) {
-      textarea.value = `${textarea.value.substring(
+      this.element.value = `${this.element.value.substring(
         0,
-        textarea.selectionStart
-      )}${input}${textarea.value.substring(
-        textarea.selectionEnd,
-        textarea.value.length
+        start
+      )}${input}${this.element.value.substring(
+        end,
+        this.element.value.length
       )}`;
       this.handleDiacritic();
-    } else textarea.value = EMPTY_STRING;
-  }
 
-  clear() {
-    document.querySelector('textarea').value = EMPTY_STRING;
-    this.update();
+      this.element.selectionStart = start + input.length;
+      this.element.selectionEnd = start + input.length;
+    } else this.element.value = EMPTY_STRING;
   }
 
   backspace() {
-    const value = document.querySelector('textarea').value.split('');
-    value.pop();
-    document.querySelector('textarea').value = value.join('');
+    this.element.focus();
+
+    const start = this.element.selectionStart;
+    const end = this.element.selectionEnd;
+
+    const value =
+      this.element.value.substring(0, start - 1) +
+      this.element.value.substring(end, this.element.value.length);
+
+    this.element.value = value;
+    this.element.selectionStart = start - 1;
+    this.element.selectionEnd = start - 1;
   }
 
   handleArrowNavigation(arrow) {
-    console.log('arrow move', arrow);
+    const arrowCode = arrow.getAttribute('code');
+
+    switch (arrowCode) {
+      case 'ArrowUp':
+        break;
+      case 'ArrowDown':
+        break;
+      case 'ArrowLeft':
+        if (this.element.selectionEnd > 0) this.element.selectionEnd -= 1;
+        break;
+      case 'ArrowRight':
+        this.element.selectionStart += 1;
+        break;
+      default:
+        break;
+    }
   }
 
   handleDiacritic() {
-    let textareaValue = document.querySelector('textarea').value;
-    const charFromEnd = (index) =>
-      textareaValue.charCodeAt(textareaValue.length - index);
+    let value = this.element.value;
+    const charFromEnd = (index) => value.charCodeAt(value.length - index);
     const vowels = [97, 101, 105, 111, 117];
 
     if (
@@ -65,12 +79,29 @@ export default class Textarea {
       charFromEnd(2) <= 879 &&
       vowels.includes(charFromEnd(1))
     ) {
-      const valueArr = textareaValue.split('');
-      [valueArr[valueArr.length - 2], valueArr[valueArr.length - 1]] = [
-        valueArr[valueArr.length - 1],
-        valueArr[valueArr.length - 2],
+      const arr = value.split('');
+      [arr[arr.length - 2], arr[arr.length - 1]] = [
+        arr[arr.length - 1],
+        arr[arr.length - 2],
       ];
-      this.value = valueArr.join('');
+      this.element.value = arr.join('');
     }
+  }
+
+  saveAsFile() {
+    if (this.element.value === EMPTY_STRING) return;
+    const blob = new Blob([this.element.value], { type: 'text/plain' });
+
+    const downloadLink = document.createElement('a');
+    downloadLink.download = 'virtual-keyboard.txt';
+    if (window.webkitURL != null) {
+      downloadLink.href = window.webkitURL.createObjectURL(blob);
+    } else {
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.onclick = document.body.removeChild(event.target);
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+    }
+    downloadLink.click();
   }
 }

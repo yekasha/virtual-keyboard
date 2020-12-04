@@ -11,4 +11,11 @@ export const UI = {
     'Нажмите на клавиатуру, чтобы начать печатать...',
   ],
   clear: ['Clear', 'Reiniciar', 'Очистить'],
+  features: [
+    '⌨️ Detects your OS and switches layouts',
+    '🌐 International support, for now English, Spanish and Russian',
+    '🖋️ Diacritics handled, add multiple accents on a letter',
+    '🌈 Background gradient shifts according to your local time of day',
+    '📊 (UPCOMING) Second-tier shift! Add math symbols effortlessly with Alt + Key',
+  ],
 };

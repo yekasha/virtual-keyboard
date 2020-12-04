@@ -1,27 +1,26 @@
 import { keyboardLayout, modifierKeys, navigationKeys } from '../common';
 import { supportedLanguages, supportedPlatforms } from '../config';
 import { UI } from '../config/constants';
-import { createElement } from '../utils/createElement';
+import { createElement, DOMElements } from '../utils';
 import Key from './Key';
 import Textarea from './Textarea';
 
 const WINDOWS = 0;
-const IOS = 1;
+const MACOS = 1;
 export default class Keyboard {
   constructor(language) {
     this.activeLanguage = language;
 
     this.OS = !navigator.platform.includes('Mac')
       ? supportedPlatforms[WINDOWS]
-      : supportedPlatforms[IOS];
+      : supportedPlatforms[MACOS];
 
     this.isWindows = !navigator.platform.includes('Mac');
 
     this.keyboard = null;
     this.textarea = null;
 
-    this.languages = [];
-    this.languageIndex = {};
+    this.languages = {};
 
     this.shiftEnabled = false;
     this.capsEnabled = false;
@@ -37,30 +36,16 @@ export default class Keyboard {
 
   setupSupportedLanguages() {
     supportedLanguages.forEach(
-      (language, index) => (this.languageIndex[language.code] = index)
+      (language, index) => (this.languages[language.code] = index)
     );
     localStorage.setItem('lang', this.activeLanguage.code);
   }
 
   renderDOMElements() {
-    console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    const langIndex = this.languages[this.activeLanguage.code];
+    const languageOptions = [];
 
-    const langIndex = this.languageIndex[this.activeLanguage.code];
-    const title = createElement(
-      'h1',
-      { class: 'title', type: 'text' },
-      UI.title[langIndex]
-    );
-
-    const langDisabledOption = createElement(
-      'option',
-      {},
-      'Available languages:'
-    );
-
-    langDisabledOption.selected = false;
-    langDisabledOption.disabled = true;
-    this.languages.push(langDisabledOption);
+    languageOptions.push(DOMElements.disabledOption());
 
     supportedLanguages.forEach((lang) => {
       const langOption = createElement(
@@ -68,7 +53,7 @@ export default class Keyboard {
         { value: lang.code, id: lang.code },
         lang.name
       );
-      this.languages.push(langOption);
+      languageOptions.push(langOption);
     });
 
     const languageSwitch = createElement(
@@ -80,7 +65,13 @@ export default class Keyboard {
           this.updateLanguage();
         },
       },
-      this.languages
+      languageOptions
+    );
+
+    const languageContainer = createElement(
+      'div',
+      { class: 'select' },
+      languageSwitch
     );
 
     const osSwitchText = createElement('span', {}, this.OS);
@@ -105,55 +96,53 @@ export default class Keyboard {
         class: 'clear',
         type: 'text',
         onclick: () => {
-          this.textarea.clear();
+          this.textarea.update();
         },
       },
       UI.clear[langIndex]
     );
 
-    const languageContainer = createElement('div', { class: 'select' }, [
-      languageSwitch,
-    ]);
+    const saveButton = createElement(
+      'button',
+      {
+        class: 'material-icons',
+        onclick: () => {
+          this.textarea.saveAsFile();
+        },
+      },
+      'save_alt'
+    );
 
     const header = createElement('div', { class: 'header' }, [
-      title,
+      DOMElements.title(langIndex),
       osSwitch,
       languageContainer,
       resetButton,
+      saveButton,
     ]);
 
-    this.textarea = new Textarea(langIndex);
+    const textarea = createElement('textarea', {
+      class: 'textarea use-keyboard',
+      placeholder: UI.placeholder[langIndex],
+      autofocus: true,
+    });
+
     this.keyboard = createElement(
       'div',
       { class: `keyboard ${this.OS}` },
       this.renderKeys()
     );
 
-    const infoText = createElement(
-      'div',
-      { class: 'info', type: 'text' },
-      UI.info[langIndex]
-    );
-
-    const featurePanel = createElement(
-      'div',
-      {
-        class: 'feature-panel',
-        onclick: () => {
-          this.showFeaturePanel();
-        },
-      },
-      createElement('p', {}, '🦄')
-    );
-
     const mainContainer = createElement('div', { class: 'container' }, [
-      featurePanel,
+      DOMElements.featurePanel(),
       header,
-      this.textarea.render(),
+      textarea,
       this.keyboard,
-      infoText,
+      DOMElements.subtext(langIndex),
     ]);
     document.body.append(mainContainer);
+
+    this.textarea = new Textarea(langIndex, document.querySelector('textarea'));
   }
 
   renderKeys() {
@@ -166,29 +155,24 @@ export default class Keyboard {
     );
   }
 
-  showFeaturePanel() {
-    const panel = document.querySelector('.feature-panel');
-    panel.classList.toggle('visible');
-  }
-
   addKeyboardListeners() {
     this.keyboard.addEventListener('click', (e) => {
       e.preventDefault();
 
-      let element = e.target;
+      let clickedKey = e.target;
 
-      if (element.localName === 'div') return;
-      if (element.localName === 'span') element = element.parentNode;
+      if (clickedKey.localName === 'div') return;
+      if (clickedKey.localName === 'span') clickedKey = clickedKey.parentNode;
       if (
         modifierKeys
           .join(' ')
           .toLowerCase()
-          .includes(element.classList.value.split(' ')[1])
+          .includes(clickedKey.classList.value.split(' ')[1])
       )
-        this.handleModifierKey(element);
-      if (element.classList.value.includes('Arrow'))
-        this.textarea.handleArrowNavigation(element);
-      else this.handleAlphanumericInput(element);
+        return this.handleModifierKey(clickedKey);
+      if (clickedKey.classList.value.includes('Arrow'))
+        return this.textarea.handleArrowNavigation(clickedKey);
+      else this.handleAlphanumericInput(clickedKey);
     });
   }
 
@@ -207,7 +191,7 @@ export default class Keyboard {
 
       if (modifierKeys.includes(key)) return this.handleModifierKey(pressedKey);
       if (navigationKeys.includes(key))
-        return this.handleArrowNavigation(pressedKey);
+        return this.textarea.handleArrowNavigation(pressedKey);
       else return this.handleAlphanumericInput(pressedKey);
     });
 
@@ -223,26 +207,6 @@ export default class Keyboard {
     });
   }
 
-  handleArrowNavigation(element) {
-    const arrowCode = element.getAttribute('code');
-    const textarea = document.querySelector('textarea');
-
-    switch (arrowCode) {
-      case 'ArrowUp':
-        break;
-      case 'ArrowDown':
-        break;
-      case 'ArrowLeft':
-        if (textarea.selectionEnd > 0) textarea.selectionEnd -= 1;
-        break;
-      case 'ArrowRight':
-        textarea.selectionStart += 1;
-        break;
-      default:
-        break;
-    }
-  }
-
   handleModifierKey(element) {
     const keyCode = element.getAttribute('code');
     switch (keyCode) {
@@ -250,7 +214,6 @@ export default class Keyboard {
         this.textarea.update(' ');
         break;
       case 'Enter':
-        console.log('enter is pressed');
         this.textarea.update('\n');
         break;
       case 'Tab':
@@ -334,13 +297,13 @@ export default class Keyboard {
     const UIElements = document.querySelectorAll('[type="text"]');
     UIElements.forEach((element) => {
       element.innerText =
-        UI[element.classList][this.languageIndex[this.activeLanguage.code]];
+        UI[element.classList][this.languages[this.activeLanguage.code]];
     });
   }
 
   updateLanguage() {
     this.setLanguageOptions();
-    this.textarea.updateLanguage(this.languageIndex[this.activeLanguage.code]);
+    this.textarea.updateLanguage(this.languages[this.activeLanguage.code]);
     this.updateUIText();
     this.updateKeyboardKeys();
   }
@@ -349,7 +312,7 @@ export default class Keyboard {
     this.isWindows = !this.isWindows;
     this.OS = this.isWindows
       ? supportedPlatforms[WINDOWS]
-      : supportedPlatforms[IOS];
+      : supportedPlatforms[MACOS];
     document.querySelector('label > span').innerText = this.OS;
     localStorage.setItem('os', this.OS);
 

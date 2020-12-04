@@ -1,23 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 html {
   font-size: 62.5%;
 }
 
+.material-icons {
+  font-family: 'Material Icons';
+  font-size: 2rem;
+  line-height: 2.5rem;
+  display: inline-block;
+  border-radius: 0.5rem;
+  border: none;
+  background: white;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
 body {
-  background: #1f1f1f;
-  font-family: 'Raleway', Verdana sans-serif;
+  background: #383352;
+  font-family: 'Raleway', Verdana, sans-serif;
   font-size: 10px;
   transition: all 1s ease;
 
   &.morning {
     background: #355c7d;
-    background: linear-gradient(to top, #c06c84, #6c5b7b, #355c7d);
+    background: linear-gradient(270deg, #c06c84, #6c5b7b, #355c7d);
   }
 
   &.noon {
     background: #c6ffdd;
-    background: linear-gradient(to bottom, #c6ffdd, #fbd786, #f7797d);
+    background: linear-gradient(270deg, #66e498, #fbd786, #f7797d);
   }
 
   &.afternoon {
@@ -32,7 +45,7 @@ body {
 
   &.night {
     background: #0f2027;
-    background: linear-gradient(to top, #2c5364, #203a43, #0f2027);
+    background: linear-gradient(270deg, #2c5364, #203a43, #0f2027);
   }
 }
 
@@ -68,18 +81,59 @@ body {
   cursor: pointer;
 
   &.visible {
-    height: 500px;
-    width: 420px;
-
+    height: 420px;
+    width: 400px;
     & p {
       opacity: 0;
-      visibility: hidden;
+      display: none;
+    }
+    & .container {
+      opacity: 1;
+      visibility: visible;
+
+      & ul li {
+        animation: fade-in 2s;
+      }
     }
   }
 
   & p {
+    font-size: 2rem;
+    transition: opacity 0.3s ease;
+    top: -1.3rem;
+    display: block;
+    position: absolute;
+  }
+
+  & .container {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     color: white;
-    font-size: 18px;
+    width: inherit;
+
+    & h2 {
+      padding: 0 3rem;
+      font-size: 2rem;
+    }
+
+    & ul {
+      list-style: none;
+      font-size: 1.7rem;
+      width: 80%;
+      padding-left: 5rem;
+    }
+
+    & ul li {
+      padding-bottom: 1.5rem;
+
+      color: rgb(190, 190, 190);
+      text-indent: -2.5rem;
+
+      &:hover {
+        color: white;
+      }
+    }
   }
 }
 
@@ -106,6 +160,7 @@ h1:hover {
 }
 
 textarea {
+  font-family: 'Raleway', Verdana, sans-serif;
   width: 100%;
   height: 200px;
   padding: 2rem;
@@ -148,7 +203,7 @@ textarea:focus {
     grid-template-areas: '. . . . . . . . . . . . . backspace backspace' 'tab tab . . . . . . . . . . . . enter' 'capslock capslock . . . . . . . . . . . . enter' 'shiftleft shiftleft .shiftkeft . . . . . . . . . shiftright shiftright' '. . . space space space space space space space . . navigation navigation navigation';
   }
 
-  &.ios {
+  &.macos {
     grid-template-areas:
       '. . . . . . . . . . . . . backspace backspace'
       'tab tab . . . . . . . . . . . . .'
@@ -160,6 +215,7 @@ textarea:focus {
 
 .keyboard__key {
   min-width: 55px;
+  margin: 2px;
   flex-direction: column-reverse;
   border-width: 0;
   outline: 0;
@@ -409,4 +465,13 @@ select {
   -webkit-transform: translate3d(100%, 0, 0);
   -moz-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

@@ -102,11 +102,23 @@ export default class Keyboard {
       UI.clear[langIndex]
     );
 
+    const saveButton = createElement(
+      'button',
+      {
+        class: 'material-icons',
+        onclick: () => {
+          this.textarea.saveAsFile();
+        },
+      },
+      'save_alt'
+    );
+
     const header = createElement('div', { class: 'header' }, [
       DOMElements.title(langIndex),
       osSwitch,
       languageContainer,
       resetButton,
+      saveButton,
     ]);
 
     const textarea = createElement('textarea', {

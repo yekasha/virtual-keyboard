@@ -87,4 +87,21 @@ export default class Textarea {
       this.element.value = arr.join('');
     }
   }
+
+  saveAsFile() {
+    if (this.element.value === EMPTY_STRING) return;
+    const blob = new Blob([this.element.value], { type: 'text/plain' });
+
+    const downloadLink = document.createElement('a');
+    downloadLink.download = 'virtual-keyboard.txt';
+    if (window.webkitURL != null) {
+      downloadLink.href = window.webkitURL.createObjectURL(blob);
+    } else {
+      downloadLink.href = window.URL.createObjectURL(blob);
+      downloadLink.onclick = document.body.removeChild(event.target);
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+    }
+    downloadLink.click();
+  }
 }

@@ -17,15 +17,21 @@ export default class Textarea {
   update(input) {
     this.element.focus();
 
+    const start = this.element.selectionStart;
+    const end = this.element.selectionEnd;
+
     if (input) {
       this.element.value = `${this.element.value.substring(
         0,
-        this.element.selectionStart
+        start
       )}${input}${this.element.value.substring(
-        this.element.selectionEnd,
+        end,
         this.element.value.length
       )}`;
       this.handleDiacritic();
+
+      this.element.selectionStart = start + input.length;
+      this.element.selectionEnd = start + input.length;
     } else this.element.value = EMPTY_STRING;
   }
 

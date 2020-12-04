@@ -23,10 +23,6 @@
 
 ## TODO
 
-- [ ] fix caret position upon arrow update
-- [x] fix styles
-- [x] add os toggle behavior
+- [ ] fix caret position upon update + input
 - [ ] add up/down arrow behavior
 - [ ] add alt + letter shift
-- [x] refactor constants and UI
-- [x] shift gradients by time

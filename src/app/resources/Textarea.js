@@ -3,51 +3,36 @@ import { createElement } from '../utils/createElement';
 
 const EMPTY_STRING = '';
 export default class Textarea {
-  constructor(langIndex) {
+  constructor(langIndex, element) {
     this.index = langIndex;
-    this.value = EMPTY_STRING;
+    this.element = element;
   }
 
   updateLanguage(lang) {
     this.index = lang;
-    document.querySelector('textarea').value = EMPTY_STRING;
-    document.querySelector('textarea').placeholder = UI.placeholder[this.index];
-  }
-
-  render() {
-    return createElement('textarea', {
-      class: 'textarea use-keyboard',
-      placeholder: UI.placeholder[this.index],
-      autofocus: true,
-    });
+    this.element.value = EMPTY_STRING;
+    this.element.placeholder = UI.placeholder[this.index];
   }
 
   update(input) {
-    const textarea = document.querySelector('textarea');
-    textarea.focus();
+    this.element.focus();
 
-    // TODO: fix switching caret position and input case...  (only 1 letter work for now), then caret resets
     if (input) {
-      textarea.value = `${textarea.value.substring(
+      this.element.value = `${this.element.value.substring(
         0,
-        textarea.selectionStart
-      )}${input}${textarea.value.substring(
-        textarea.selectionEnd,
-        textarea.value.length
+        this.element.selectionStart
+      )}${input}${this.element.value.substring(
+        this.element.selectionEnd,
+        this.element.value.length
       )}`;
       this.handleDiacritic();
-    } else textarea.value = EMPTY_STRING;
-  }
-
-  clear() {
-    document.querySelector('textarea').value = EMPTY_STRING;
-    this.update();
+    } else this.element.value = EMPTY_STRING;
   }
 
   backspace() {
-    const value = document.querySelector('textarea').value.split('');
-    value.pop();
-    document.querySelector('textarea').value = value.join('');
+    const arr = this.element.value.split('');
+    arr.pop();
+    this.element.value = arr.join('');
   }
 
   handleArrowNavigation(arrow) {
@@ -55,9 +40,8 @@ export default class Textarea {
   }
 
   handleDiacritic() {
-    let textareaValue = document.querySelector('textarea').value;
-    const charFromEnd = (index) =>
-      textareaValue.charCodeAt(textareaValue.length - index);
+    let value = this.element.value;
+    const charFromEnd = (index) => value.charCodeAt(value.length - index);
     const vowels = [97, 101, 105, 111, 117];
 
     if (
@@ -65,12 +49,12 @@ export default class Textarea {
       charFromEnd(2) <= 879 &&
       vowels.includes(charFromEnd(1))
     ) {
-      const valueArr = textareaValue.split('');
-      [valueArr[valueArr.length - 2], valueArr[valueArr.length - 1]] = [
-        valueArr[valueArr.length - 1],
-        valueArr[valueArr.length - 2],
+      const arr = value.split('');
+      [arr[arr.length - 2], arr[arr.length - 1]] = [
+        arr[arr.length - 1],
+        arr[arr.length - 2],
       ];
-      this.value = valueArr.join('');
+      this.element.value = arr.join('');
     }
   }
 }

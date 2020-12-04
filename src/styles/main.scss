@@ -5,19 +5,19 @@ html {
 }
 
 body {
-  background: #1f1f1f;
+  background: #383352;
   font-family: 'Raleway', Verdana sans-serif;
   font-size: 10px;
   transition: all 1s ease;
 
   &.morning {
     background: #355c7d;
-    background: linear-gradient(to top, #c06c84, #6c5b7b, #355c7d);
+    background: linear-gradient(270deg, #c06c84, #6c5b7b, #355c7d);
   }
 
   &.noon {
     background: #c6ffdd;
-    background: linear-gradient(to bottom, #c6ffdd, #fbd786, #f7797d);
+    background: linear-gradient(270deg, #66e498, #fbd786, #f7797d);
   }
 
   &.afternoon {
@@ -32,7 +32,7 @@ body {
 
   &.night {
     background: #0f2027;
-    background: linear-gradient(to top, #2c5364, #203a43, #0f2027);
+    background: linear-gradient(270deg, #2c5364, #203a43, #0f2027);
   }
 }
 

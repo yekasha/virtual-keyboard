@@ -42,7 +42,6 @@ export default class Keyboard {
   }
 
   renderDOMElements() {
-    console.log(this.languages);
     const langIndex = this.languages[this.activeLanguage.code];
     const languageOptions = [];
 
@@ -97,7 +96,7 @@ export default class Keyboard {
         class: 'clear',
         type: 'text',
         onclick: () => {
-          this.textarea.clear();
+          this.textarea.update();
         },
       },
       UI.clear[langIndex]
@@ -110,7 +109,12 @@ export default class Keyboard {
       resetButton,
     ]);
 
-    this.textarea = new Textarea(langIndex);
+    const textarea = createElement('textarea', {
+      class: 'textarea use-keyboard',
+      placeholder: UI.placeholder[langIndex],
+      autofocus: true,
+    });
+
     this.keyboard = createElement(
       'div',
       { class: `keyboard ${this.OS}` },
@@ -120,11 +124,13 @@ export default class Keyboard {
     const mainContainer = createElement('div', { class: 'container' }, [
       DOMElements.featurePanel(),
       header,
-      this.textarea.render(),
+      textarea,
       this.keyboard,
       DOMElements.subtext(langIndex),
     ]);
     document.body.append(mainContainer);
+
+    this.textarea = new Textarea(langIndex, document.querySelector('textarea'));
   }
 
   renderKeys() {

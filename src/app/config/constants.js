@@ -16,6 +16,6 @@ export const UI = {
     '🌐 International support, for now English, Spanish and Russian',
     '🖋️ Diacritics handled, add multiple accents on a letter',
     '🌈 Background gradient shifts according to your local time of day',
-    '📊 Second-tier shift! Add math symbols effortlessly - ∑, ∆, ≈, √ ...',
+    '📊 (UPCOMING) Second-tier shift! Add math symbols effortlessly with Alt + Key',
   ],
 };

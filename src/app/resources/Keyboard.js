@@ -6,14 +6,14 @@ import Key from './Key';
 import Textarea from './Textarea';
 
 const WINDOWS = 0;
-const IOS = 1;
+const MACOS = 1;
 export default class Keyboard {
   constructor(language) {
     this.activeLanguage = language;
 
     this.OS = !navigator.platform.includes('Mac')
       ? supportedPlatforms[WINDOWS]
-      : supportedPlatforms[IOS];
+      : supportedPlatforms[MACOS];
 
     this.isWindows = !navigator.platform.includes('Mac');
 
@@ -321,7 +321,7 @@ export default class Keyboard {
     this.isWindows = !this.isWindows;
     this.OS = this.isWindows
       ? supportedPlatforms[WINDOWS]
-      : supportedPlatforms[IOS];
+      : supportedPlatforms[MACOS];
     document.querySelector('label > span').innerText = this.OS;
     localStorage.setItem('os', this.OS);
 

@@ -157,9 +157,9 @@ export default class Keyboard {
           .toLowerCase()
           .includes(element.classList.value.split(' ')[1])
       )
-        this.handleModifierKey(element);
+        return this.handleModifierKey(element);
       if (element.classList.value.includes('Arrow'))
-        this.textarea.handleArrowNavigation(element);
+        return this.textarea.handleArrowNavigation(element);
       else this.handleAlphanumericInput(element);
     });
   }
@@ -222,7 +222,6 @@ export default class Keyboard {
         this.textarea.update(' ');
         break;
       case 'Enter':
-        console.log('enter is pressed');
         this.textarea.update('\n');
         break;
       case 'Tab':

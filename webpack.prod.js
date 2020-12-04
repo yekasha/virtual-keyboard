@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin'); //installed via npm
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const postcssPresetEnv = require('postcss-preset-env');
 
 const buildPath = path.resolve(__dirname, 'dist');
 
@@ -43,10 +44,11 @@ module.exports = {
             },
           },
           {
-            // Runs compiled CSS through postcss for vendor prefixing
             loader: 'postcss-loader',
             options: {
               sourceMap: true,
+              ident: 'postcss',
+              plugins: () => [postcssPresetEnv()],
             },
           },
           {

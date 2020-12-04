@@ -36,13 +36,37 @@ export default class Textarea {
   }
 
   backspace() {
-    const arr = this.element.value.split('');
-    arr.pop();
-    this.element.value = arr.join('');
+    this.element.focus();
+
+    const start = this.element.selectionStart;
+    const end = this.element.selectionEnd;
+
+    const value =
+      this.element.value.substring(0, start - 1) +
+      this.element.value.substring(end, this.element.value.length);
+
+    this.element.value = value;
+    this.element.selectionStart = start - 1;
+    this.element.selectionEnd = start - 1;
   }
 
   handleArrowNavigation(arrow) {
-    console.log('arrow move', arrow);
+    const arrowCode = arrow.getAttribute('code');
+
+    switch (arrowCode) {
+      case 'ArrowUp':
+        break;
+      case 'ArrowDown':
+        break;
+      case 'ArrowLeft':
+        if (this.element.selectionEnd > 0) this.element.selectionEnd -= 1;
+        break;
+      case 'ArrowRight':
+        this.element.selectionStart += 1;
+        break;
+      default:
+        break;
+    }
   }
 
   handleDiacritic() {

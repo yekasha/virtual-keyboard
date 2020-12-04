@@ -147,20 +147,20 @@ export default class Keyboard {
     this.keyboard.addEventListener('click', (e) => {
       e.preventDefault();
 
-      let element = e.target;
+      let clickedKey = e.target;
 
-      if (element.localName === 'div') return;
-      if (element.localName === 'span') element = element.parentNode;
+      if (clickedKey.localName === 'div') return;
+      if (clickedKey.localName === 'span') clickedKey = clickedKey.parentNode;
       if (
         modifierKeys
           .join(' ')
           .toLowerCase()
-          .includes(element.classList.value.split(' ')[1])
+          .includes(clickedKey.classList.value.split(' ')[1])
       )
-        return this.handleModifierKey(element);
-      if (element.classList.value.includes('Arrow'))
-        return this.textarea.handleArrowNavigation(element);
-      else this.handleAlphanumericInput(element);
+        return this.handleModifierKey(clickedKey);
+      if (clickedKey.classList.value.includes('Arrow'))
+        return this.textarea.handleArrowNavigation(clickedKey);
+      else this.handleAlphanumericInput(clickedKey);
     });
   }
 
@@ -179,7 +179,7 @@ export default class Keyboard {
 
       if (modifierKeys.includes(key)) return this.handleModifierKey(pressedKey);
       if (navigationKeys.includes(key))
-        return this.handleArrowNavigation(pressedKey);
+        return this.textarea.handleArrowNavigation(pressedKey);
       else return this.handleAlphanumericInput(pressedKey);
     });
 
@@ -193,26 +193,6 @@ export default class Keyboard {
         this.manageLetterCase();
       }
     });
-  }
-
-  handleArrowNavigation(element) {
-    const arrowCode = element.getAttribute('code');
-    const textarea = document.querySelector('textarea');
-
-    switch (arrowCode) {
-      case 'ArrowUp':
-        break;
-      case 'ArrowDown':
-        break;
-      case 'ArrowLeft':
-        if (textarea.selectionEnd > 0) textarea.selectionEnd -= 1;
-        break;
-      case 'ArrowRight':
-        textarea.selectionStart += 1;
-        break;
-      default:
-        break;
-    }
   }
 
   handleModifierKey(element) {

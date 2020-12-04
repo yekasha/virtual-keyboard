@@ -1,6 +1,6 @@
 # RS School 2020Q1 task Virtual Keyboard
 
-[View demo](kotiknalune-virtual-keyboard.netlify.app)
+[view demo](https://kotiknalune-virtual-keyboard.netlify.app)
 
 ## Общие Требования
 
@@ -20,9 +20,3 @@
 - должно работать в Chrome последней версии
 - использование jQuery, Bootstrap и других CSS фреймворков не допускается
 - использование Angular/React/Vue и других фреймворков не допускается
-
-## TODO
-
-- [ ] fix caret position upon update + input
-- [ ] add up/down arrow behavior
-- [ ] add alt + letter shift
